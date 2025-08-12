@@ -11,19 +11,19 @@
     box-sizing: border-box;
   }
   body {
-    background: #000;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
     color: #ff1ac6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    height: 100vh;           /* full viewport height */
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* center vertically */
+    justify-content: center;
     gap: 1.5rem;
     text-align: center;
     padding: 2rem 1rem 0 1rem;
-    transition: background-color 0.5s ease;
-    overflow: hidden;        /* no scrolling */
+    overflow: hidden;
     opacity: 0;
     animation: fadeIn 1.5s forwards ease-in;
   }
@@ -72,7 +72,6 @@
     font-style: italic;
   }
 
-  /* New container for social buttons */
   .social-buttons {
     margin-top: 1rem;
     display: flex;
@@ -123,22 +122,5 @@
       </div>
     </div>
   </div>
-
-  <script>
-    window.addEventListener('scroll', () => {
-      const scrollTop = window.scrollY;
-      const maxScroll = document.body.scrollHeight - window.innerHeight;
-      const scrollFraction = Math.min(scrollTop / maxScroll, 1);
-      
-      const startColor = [0, 0, 0];       // black
-      const endColor = [51, 0, 34];       // dark pink
-      
-      const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * scrollFraction);
-      const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * scrollFraction);
-      const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * scrollFraction);
-      
-      document.body.style.backgroundColor = `rgb(${r},${g},${b})`;
-    });
-  </script>
 </body>
 </html>
