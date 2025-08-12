@@ -14,14 +14,18 @@
     background: #000;
     color: #ff1ac6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    min-height: 200vh; /* scroll area */
+    height: 100vh;           /* full viewport height */
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* center vertically */
     gap: 1.5rem;
     text-align: center;
     padding: 2rem 1rem 0 1rem;
     transition: background-color 0.5s ease;
+    overflow: hidden;        /* no scrolling */
+    opacity: 0;
+    animation: fadeIn 1.5s forwards ease-in;
   }
 
   .profile-container {
@@ -98,10 +102,6 @@
     transform: scale(1.1);
   }
 
-  body {
-    opacity: 0;
-    animation: fadeIn 1.5s forwards ease-in;
-  }
   @keyframes fadeIn {
     to { opacity: 1; }
   }
@@ -110,12 +110,11 @@
 <body>
   <div class="profile-container">
     <img src="chronia.png" alt="Chronia looking fine" class="main-image" />
-<div>
-  <div class="name-heart" style="margin-left: 15px;">
-    𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
-  </div>
-  <div class="tagline">i make stuff in blender</div>
-</div>
+    <div>
+      <div class="name-heart" style="margin-left: 15px;">
+        𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
+      </div>
+      <div class="tagline">i make stuff in blender</div>
 
       <div class="social-buttons">
         <a href="https://discord.com/users/987815885702041610" target="_blank" class="social-btn">Discord</a>
@@ -124,6 +123,7 @@
       </div>
     </div>
   </div>
+
   <script>
     window.addEventListener('scroll', () => {
       const scrollTop = window.scrollY;
@@ -137,7 +137,7 @@
       const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * scrollFraction);
       const b = Math.round(startColor[2] + (endColor[2] - startColor[2]) * scrollFraction);
       
-      document.body.style.backgroundColor = rgb(${r},${g},${b});
+      document.body.style.backgroundColor = `rgb(${r},${g},${b})`;
     });
   </script>
 </body>
