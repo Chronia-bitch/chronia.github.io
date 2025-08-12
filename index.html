@@ -22,6 +22,12 @@
     text-align: center;
     padding: 2rem 1rem 0 1rem;
     transition: background-color 0.5s ease;
+    opacity: 0;
+    animation: fadeIn 1.5s forwards ease-in;
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
   }
 
   .profile-container {
@@ -53,6 +59,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    margin-left: 15px;
   }
   .heart {
     color: #ff4dd2;
@@ -97,26 +104,22 @@
     box-shadow: 0 0 15px #ff66d9;
     transform: scale(1.1);
   }
-
-  body {
-    opacity: 0;
-    animation: fadeIn 1.5s forwards ease-in;
-  }
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
 </style>
 </head>
 <body>
+  <!-- Sexy zen audio that loops -->
+  <audio autoplay loop muted id="background-music">
+    <source src="zenyata (mp3cut.net).mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+
   <div class="profile-container">
     <img src="chronia.png" alt="Chronia looking fine" class="main-image" />
-<div>
-  <div class="name-heart" style="margin-left: 15px;">
-    𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
-  </div>
-  <div class="tagline">i make stuff in blender</div>
-</div>
-
+    <div>
+      <div class="name-heart">
+        𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
+      </div>
+      <div class="tagline">i make stuff in blender</div>
       <div class="social-buttons">
         <a href="https://discord.com/users/987815885702041610" target="_blank" class="social-btn">Discord</a>
         <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde?si=3256bf32dfab4499" target="_blank" class="social-btn">Spotify</a>
@@ -124,6 +127,7 @@
       </div>
     </div>
   </div>
+
   <script>
     window.addEventListener('scroll', () => {
       const scrollTop = window.scrollY;
