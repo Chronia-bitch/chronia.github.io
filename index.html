@@ -50,14 +50,24 @@
     z-index: 9999;
   }
 
+  /* Hide custom cursor on hover over interactive elements */
+  a:hover, button:hover, .social-btn:hover, #profile-pic:hover {
+    cursor: pointer;
+  }
+  a:hover ~ #custom-cursor,
+  button:hover ~ #custom-cursor,
+  .social-btn:hover ~ #custom-cursor,
+  #profile-pic:hover ~ #custom-cursor {
+    display: none !important;
+  }
+
   .profile-container {
     display: flex;
     align-items: center;
     gap: 1.5rem;
     position: relative;
-    /* Shadow play container */
     filter: drop-shadow(0 0 10px #ff1ac6);
-    transition: filter 0.3s ease;
+    transition: filter 0.3s ease, transform 0.3s ease;
   }
 
   .main-image {
@@ -68,6 +78,7 @@
     box-shadow: 0 0 20px #ff1ac6;
     transition: box-shadow 0.4s ease, transform 0.3s ease;
     flex-shrink: 0;
+    cursor: pointer; /* show pointer on hover */
   }
   .main-image:hover {
     box-shadow: 0 0 40px #ff66d9;
@@ -137,12 +148,8 @@
     transform: scale(1.1);
   }
 
-  /* Visualizer Container */
+  /* Visualizer Container next to profile pic */
   #visualizer {
-    position: fixed;
-    bottom: 15px;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
     gap: 4px;
     align-items: flex-end;
@@ -185,9 +192,19 @@
 </head>
 <body>
 
-  <div id="custom-cursor"></div>
-
   <div class="profile-container">
+    <div id="visualizer">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
     <img src="chronia.png" alt="Chronia looking fine" class="main-image" id="profile-pic" />
     <div>
       <div class="name-heart" style="margin-left: 15px;">
@@ -205,19 +222,8 @@
   <!-- Audio player -->
   <audio id="background-audio" src="zenyata (mp3cut.net).mp3" autoplay loop></audio>
 
-  <!-- Visualizer -->
-  <div id="visualizer">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-  </div>
+  <!-- Custom cursor -->
+  <div id="custom-cursor"></div>
 
 <script>
   // Custom cursor follow
@@ -236,7 +242,6 @@
   });
 
   // Fix smooth parallax effect on profile container
-  // We'll make the profile container tilt subtly with mouse move
   window.addEventListener('mousemove', e => {
     const x = (e.clientX / window.innerWidth - 0.5) * 10; // rotate max 10deg
     const y = (e.clientY / window.innerHeight - 0.5) * 10;
