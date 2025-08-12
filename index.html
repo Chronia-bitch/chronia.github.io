@@ -14,13 +14,13 @@
     background: #000;
     color: #ff1ac6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    min-height: 200vh; /* so we have scroll */
+    min-height: 200vh; /* scroll area */
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     gap: 1.5rem;
     text-align: center;
+    padding: 2rem 1rem 0 1rem; /* push content to top */
     transition: background-color 0.5s ease;
   }
 
@@ -95,10 +95,8 @@
       const maxScroll = document.body.scrollHeight - window.innerHeight;
       const scrollFraction = Math.min(scrollTop / maxScroll, 1);
       
-      // Calculate color blending from black to dark pink (#330022)
-      // We'll interpolate RGB channels here for smooth fade
-      const startColor = [0, 0, 0];       // black rgb(0,0,0)
-      const endColor = [51, 0, 34];       // dark pink rgb(51,0,34)
+      const startColor = [0, 0, 0];       // black
+      const endColor = [51, 0, 34];       // dark pink
       
       const r = Math.round(startColor[0] + (endColor[0] - startColor[0]) * scrollFraction);
       const g = Math.round(startColor[1] + (endColor[1] - startColor[1]) * scrollFraction);
