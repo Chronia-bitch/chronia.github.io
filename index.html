@@ -24,6 +24,13 @@
     transition: background-color 0.5s ease;
   }
 
+  /* Container for profile + name + tagline */
+  .profile-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
   .main-image {
     width: 150px;
     height: 150px;
@@ -31,29 +38,37 @@
     object-fit: cover;
     box-shadow: 0 0 20px #ff1ac6;
     transition: box-shadow 0.4s ease, transform 0.3s ease;
+    flex-shrink: 0;
   }
   .main-image:hover {
     box-shadow: 0 0 40px #ff66d9;
     transform: scale(1.05);
   }
 
-  h1 {
-    font-weight: 600;
-    font-size: 3.5rem;
+  /* Name + heart */
+  .name-heart {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 700;
     color: #ff1ac6;
     text-shadow: 0 0 15px #ff66d9;
-    transition: color 0.3s ease;
-    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
-  h1:hover {
+  .heart {
     color: #ff4dd2;
+    font-size: 2.5rem;
+    user-select: none;
   }
 
-  p {
-    font-size: 1.25rem;
+  /* Tagline */
+  .tagline {
     color: #ff66d9;
     opacity: 0.8;
-    letter-spacing: 0.05em;
+    font-size: 1.25rem;
+    margin-top: 0.2rem;
+    font-style: italic;
   }
 
   .btn {
@@ -84,9 +99,16 @@
 </style>
 </head>
 <body>
-  <img src="chronia.png" alt="Chronia looking fine" class="main-image" />
-  <h1>Hey, it's Chronia</h1>
-  <p>A sleek and sexy page made just for you</p>
+  <div class="profile-container">
+    <img src="chronia.png" alt="Chronia looking fine" class="main-image" />
+    <div>
+      <div class="name-heart">
+        𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
+      </div>
+      <div class="tagline">i make stuff in blender</div>
+    </div>
+  </div>
+
   <button class="btn" onclick="alert('Hey sexy, thanks for clicking!')">Click Me</button>
 
   <script>
