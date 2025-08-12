@@ -226,46 +226,85 @@
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
   });
+<style>
+  .profile-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    filter: drop-shadow(0 0 10px #ff1ac6);
+    transition: filter 0.3s ease, transform 0.3s ease;
+  }
+  #visualizer {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    width: 20px;
+  }
+  .bar {
+    width: 8px;
+    background: #ff1ac6;
+    border-radius: 5px;
+    opacity: 0.8;
+  }
+</style>
 
-  // Shadow play: subtle shadow shift based on mouse movement
-  const profile = document.querySelector('.profile-container');
-  window.addEventListener('mousemove', e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 20; // max 20px shift
-    const y = (e.clientY / window.innerHeight - 0.5) * 20;
-    profile.style.filter = `drop-shadow(${x}px ${y}px 15px #ff1ac6)`;
-  });
+<div class="profile-container">
+  <div id="visualizer">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+  <img src="chronia.png" alt="Chronia looking fine" class="main-image" id="profile-pic" />
+  <div>
+    <div class="name-heart" style="margin-left: 15px;">
+      𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
+    </div>
+    <div class="tagline">i make stuff in blender</div>
+    <div class="social-buttons">
+      <a href="https://discord.com/users/987815885702041610" target="_blank" class="social-btn">Discord</a>
+      <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde?si=3256bf32dfab4499" target="_blank" class="social-btn">Spotify</a>
+      <a href="https://www.roblox.com/users/502463017/profile" target="_blank" class="social-btn">Roblox</a>
+    </div>
+  </div>
+</div>
 
-  // Fix smooth parallax effect on profile container
-  // We'll make the profile container tilt subtly with mouse move
-  window.addEventListener('mousemove', e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 10; // rotate max 10deg
-    const y = (e.clientY / window.innerHeight - 0.5) * 10;
-    profile.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
-  });
+<audio id="background-audio" src="zenyata (mp3cut.net).mp3" loop></audio>
 
-  // Background click or easter egg to toggle backgrounds
-  const body = document.body;
-  const backgrounds = ['background.jpg', 'background2.jpg'];
-  let bgIndex = 0;
-  document.getElementById('profile-pic').addEventListener('click', () => {
-    bgIndex = (bgIndex + 1) % backgrounds.length;
-    body.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
-  });
-
-  // Audio Visualizer bars synced roughly with audio playback time (fake pulse for now)
+<script>
+  const audio = document.getElementById('background-audio');
   const bars = document.querySelectorAll('#visualizer .bar');
-  let pulseIndex = 0;
-  setInterval(() => {
-    bars.forEach((bar, i) => {
-      const delay = (i + pulseIndex) % bars.length;
-      const scale = 15 + 45 * Math.abs(Math.sin(Date.now() / 300 + delay));
-      bar.style.height = scale + 'px';
-      bar.style.opacity = 0.5 + 0.5 * Math.abs(Math.sin(Date.now() / 300 + delay));
-    });
-    pulseIndex = (pulseIndex + 1) % bars.length;
-  }, 100);
 
+  // Wait for user interaction to start audio (to avoid autoplay block)
+  function startAudio() {
+    audio.play();
+    window.removeEventListener('click', startAudio);
+  }
+  window.addEventListener('click', startAudio);
+
+  // Animate bars synced with audio playback (fake pulse)
+  setInterval(() => {
+    if (!audio.paused) {
+      bars.forEach((bar, i) => {
+        const delay = i * 0.3;
+        const scale = 15 + 45 * Math.abs(Math.sin(Date.now() / 300 + delay));
+        bar.style.height = scale + 'px';
+        bar.style.opacity = 0.5 + 0.5 * Math.abs(Math.sin(Date.now() / 300 + delay));
+      });
+    }
+  }, 100);
 </script>
+
 
 </body>
 </html>
