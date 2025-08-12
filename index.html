@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>chronia - Minimal & Sexy</title>
+<title>Chronia - Minimal & Sexy</title>
 <style>
   * {
     margin: 0; 
@@ -11,8 +11,7 @@
     box-sizing: border-box;
   }
   body {
-    background: url('background.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: url('background.jpg') center/cover no-repeat;
     color: #ff1ac6;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     height: 100vh;
@@ -22,10 +21,8 @@
     justify-content: center;
     gap: 1.5rem;
     text-align: center;
-    padding: 2rem 1rem 0 1rem;
+    transition: background 0.5s ease;
     overflow: hidden;
-    opacity: 0;
-    animation: fadeIn 1.5s forwards ease-in;
   }
 
   .profile-container {
@@ -42,6 +39,7 @@
     box-shadow: 0 0 20px #ff1ac6;
     transition: box-shadow 0.4s ease, transform 0.3s ease;
     flex-shrink: 0;
+    cursor: pointer;
   }
   .main-image:hover {
     box-shadow: 0 0 40px #ff66d9;
@@ -57,11 +55,20 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    margin-left: 15px;
   }
   .heart {
     color: #ff4dd2;
     font-size: 2.5rem;
     user-select: none;
+    animation: heartbeat 2s infinite ease-in-out;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1); }
+    50% { transform: scale(1.2); }
+    75% { transform: scale(1.1); }
   }
 
   .tagline {
@@ -100,21 +107,16 @@
     box-shadow: 0 0 15px #ff66d9;
     transform: scale(1.1);
   }
-
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
 </style>
 </head>
 <body>
   <div class="profile-container">
-    <img src="chronia.png" alt="Chronia looking fine" class="main-image" />
+    <img src="chronia.png" alt="Chronia looking fine" class="main-image" id="profile-pic" />
     <div>
-      <div class="name-heart" style="margin-left: 15px;">
+      <div class="name-heart">
         𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
       </div>
       <div class="tagline">i make stuff in blender</div>
-
       <div class="social-buttons">
         <a href="https://discord.com/users/987815885702041610" target="_blank" class="social-btn">Discord</a>
         <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde?si=3256bf32dfab4499" target="_blank" class="social-btn">Spotify</a>
@@ -122,5 +124,28 @@
       </div>
     </div>
   </div>
+
+<script>
+  // Subtle parallax background
+  document.addEventListener('mousemove', (e) => {
+    const moveX = (e.clientX / window.innerWidth - 0.5) * 10;
+    const moveY = (e.clientY / window.innerHeight - 0.5) * 10;
+    document.body.style.backgroundPosition = `${50 + moveX}% ${50 + moveY}%`;
+  });
+
+  // Easter egg background swap
+  const profilePic = document.getElementById('profile-pic');
+  let isAltBackground = false;
+
+  profilePic.addEventListener('click', () => {
+    if (!isAltBackground) {
+      document.body.style.background = "url('background2.jpg') center/cover no-repeat";
+      isAltBackground = true;
+    } else {
+      document.body.style.background = "url('background.jpg') center/cover no-repeat";
+      isAltBackground = false;
+    }
+  });
+</script>
 </body>
 </html>
