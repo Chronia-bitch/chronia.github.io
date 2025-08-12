@@ -10,6 +10,12 @@
     padding: 0; 
     box-sizing: border-box;
   }
+
+  /* Hide normal cursor absolutely everywhere */
+  body, button, a, .social-btn, #profile-pic {
+    cursor: none !important;
+  }
+
   body {
     background: url('background.jpg') center/cover no-repeat fixed;
     color: #ff1ac6;
@@ -21,9 +27,28 @@
     align-items: center;
     flex-direction: column;
     text-align: center;
-    cursor: none; /* hide default */
     perspective: 1000px;
     transition: background-color 0.5s ease;
+    position: relative;
+  }
+
+  /* Background fade layers for morph effect */
+  #background-fade, #background-current {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -2;
+    transition: opacity 1s ease;
+  }
+  #background-current {
+    opacity: 1;
+    background-image: url('background.jpg');
+  }
+  #background-fade {
+    opacity: 0;
   }
 
   /* Custom Heart Cursor */
@@ -50,17 +75,6 @@
     z-index: 9999;
   }
 
-  /* Hide custom cursor on hover over interactive elements */
-  a:hover, button:hover, .social-btn:hover, #profile-pic:hover {
-    cursor: pointer;
-  }
-  a:hover ~ #custom-cursor,
-  button:hover ~ #custom-cursor,
-  .social-btn:hover ~ #custom-cursor,
-  #profile-pic:hover ~ #custom-cursor {
-    display: none !important;
-  }
-
   .profile-container {
     display: flex;
     align-items: center;
@@ -78,7 +92,7 @@
     box-shadow: 0 0 20px #ff1ac6;
     transition: box-shadow 0.4s ease, transform 0.3s ease;
     flex-shrink: 0;
-    cursor: pointer; /* show pointer on hover */
+    cursor: none; /* keep hidden */
   }
   .main-image:hover {
     box-shadow: 0 0 40px #ff66d9;
@@ -132,7 +146,7 @@
     color: #ff1ac6;
     font-weight: 600;
     border-radius: 20px;
-    cursor: pointer;
+    cursor: none !important;
     font-size: 0.9rem;
     transition: all 0.3s ease;
     text-decoration: none;
@@ -156,6 +170,7 @@
     height: 60px;
     width: 200px;
     pointer-events: none;
+    margin-left: 20px;
   }
   .bar {
     width: 8px;
@@ -192,7 +207,27 @@
 </head>
 <body>
 
+  <!-- Background layers for morph effect -->
+  <div id="background-current"></div>
+  <div id="background-fade"></div>
+
+  <div id="custom-cursor"></div>
+
   <div class="profile-container">
+    <img src="chronia.png" alt="Chronia looking fine" class="main-image" id="profile-pic" />
+    <div style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="name-heart" style="margin-left: 15px;">
+        𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
+      </div>
+      <div class="tagline">i make stuff in blender</div>
+      <div class="social-buttons">
+        <a href="https://discord.com/users/987815885702041610" target="_blank" class="social-btn">Discord</a>
+        <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde?si=3256bf32dfab4499" target="_blank" class="social-btn">Spotify</a>
+        <a href="https://www.roblox.com/users/502463017/profile" target="_blank" class="social-btn">Roblox</a>
+      </div>
+    </div>
+
+    <!-- Visualizer next to pfp -->
     <div id="visualizer">
       <div class="bar"></div>
       <div class="bar"></div>
@@ -205,28 +240,13 @@
       <div class="bar"></div>
       <div class="bar"></div>
     </div>
-    <img src="chronia.png" alt="Chronia looking fine" class="main-image" id="profile-pic" />
-    <div>
-      <div class="name-heart" style="margin-left: 15px;">
-        𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
-      </div>
-      <div class="tagline">i make stuff in blender</div>
-      <div class="social-buttons">
-        <a href="https://discord.com/users/987815885702041610" target="_blank" class="social-btn">Discord</a>
-        <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde?si=3256bf32dfab4499" target="_blank" class="social-btn">Spotify</a>
-        <a href="https://www.roblox.com/users/502463017/profile" target="_blank" class="social-btn">Roblox</a>
-      </div>
-    </div>
   </div>
 
   <!-- Audio player -->
   <audio id="background-audio" src="zenyata (mp3cut.net).mp3" autoplay loop></audio>
 
-  <!-- Custom cursor -->
-  <div id="custom-cursor"></div>
-
 <script>
-  // Custom cursor follow
+  // Custom cursor follow (always visible)
   const cursor = document.getElementById('custom-cursor');
   window.addEventListener('mousemove', e => {
     cursor.style.left = e.clientX + 'px';
@@ -248,16 +268,26 @@
     profile.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
   });
 
-  // Background click or easter egg to toggle backgrounds
-  const body = document.body;
+  // Background morphing on profile pic click
   const backgrounds = ['background.jpg', 'background2.jpg'];
   let bgIndex = 0;
+  const bgCurrent = document.getElementById('background-current');
+  const bgFade = document.getElementById('background-fade');
+
   document.getElementById('profile-pic').addEventListener('click', () => {
     bgIndex = (bgIndex + 1) % backgrounds.length;
-    body.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
+    // Set fade layer background image and fade it in
+    bgFade.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
+    bgFade.style.opacity = '1';
+
+    // After fade, swap images and hide fade layer
+    setTimeout(() => {
+      bgCurrent.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
+      bgFade.style.opacity = '0';
+    }, 1000); // matches CSS transition duration
   });
 
-  // Audio Visualizer bars synced roughly with audio playback time (fake pulse for now)
+  // Audio Visualizer bars fake pulse synced with time
   const bars = document.querySelectorAll('#visualizer .bar');
   let pulseIndex = 0;
   setInterval(() => {
