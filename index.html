@@ -12,7 +12,6 @@
     box-sizing: border-box;
   }
 
-  /* Hide normal cursor absolutely everywhere */
   body, button, a, .social-btn, #profile-pic {
     cursor: none !important;
   }
@@ -35,8 +34,7 @@
     animation: fadeIn 1.5s forwards ease-in;
   }
 
-  /* Background fade layers for morph effect */
-  #background-fade, #background-current {
+  #background-current, #background-fade {
     position: fixed;
     top: 0; left: 0;
     width: 100vw; height: 100vh;
@@ -54,7 +52,6 @@
     opacity: 0;
   }
 
-  /* Custom Heart Cursor */
   #custom-cursor {
     position: fixed;
     top: 0; left: 0;
@@ -78,15 +75,46 @@
     z-index: 9999;
   }
 
+  /* FUCKING PIN SPOTIFY TO LEFT SIDE */
+  #spotify-container {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 300px;
+    height: 352px;
+    z-index: 1000;
+    box-shadow: 0 0 30px #ff1ac6;
+    border-radius: 12px 0 0 12px;
+    overflow: hidden;
+  }
+  #spotify-container iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 0 0 0 0;
+    border: none;
+  }
+
+  /* MAIN CONTENT ON THE RIGHT SIDE */
+  .main-wrapper {
+    margin-left: 320px; /* Make space for the fixed Spotify */
+    width: calc(100% - 320px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    color: #ff1ac6;
+  }
+
   .profile-container {
     display: flex;
     align-items: center;
     gap: 2rem;
-    position: relative;
     filter: drop-shadow(0 0 10px #ff1ac6);
     transition: filter 0.3s ease, transform 0.3s ease;
     max-width: 900px;
-    justify-content: flex-start; /* LEFT align everything */
+    justify-content: center;
   }
 
   .main-image {
@@ -97,7 +125,7 @@
     box-shadow: 0 0 20px #ff1ac6;
     transition: box-shadow 0.4s ease, transform 0.3s ease;
     flex-shrink: 0;
-    cursor: none; /* keep hidden */
+    cursor: none;
   }
   .main-image:hover {
     box-shadow: 0 0 40px #ff66d9;
@@ -136,7 +164,6 @@
     user-select: none;
   }
 
-  /* Social buttons */
   .social-buttons {
     margin-top: 1rem;
     display: flex;
@@ -167,28 +194,6 @@
     transform: scale(1.1);
   }
 
-  /* Left Spotify embed container */
-  #spotify-container {
-    width: 300px;
-    flex-shrink: 0;
-  }
-  #spotify-container iframe {
-    border-radius: 12px;
-    width: 100%;
-    height: 352px;
-  }
-
-  /* Text content container (title, tagline, socials) */
-  #text-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    flex: 1;
-  }
-
-  /* Visualizer Container next to profile pic */
   #visualizer {
     display: flex;
     gap: 4px;
@@ -221,7 +226,6 @@
     50% { height: 60px; opacity: 1; }
   }
 
-  /* Mute button styling */
   #mute-btn {
     position: fixed;
     top: 15px;
@@ -252,63 +256,55 @@
 </head>
 <body>
 
-  <!-- Background layers for morph effect -->
   <div id="background-current"></div>
   <div id="background-fade"></div>
 
   <div id="custom-cursor"></div>
 
-  <div class="profile-container">
-    <!-- Spotify embed left -->
-    <div id="spotify-container">
-      <iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/playlist/6Be2y9JUy7yZE97kECvH0I?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" frameborder="0" allowfullscreen=""></iframe>
-    </div>
+  <div id="spotify-container">
+    <iframe data-testid="embed-iframe" src="https://open.spotify.com/embed/playlist/6Be2y9JUy7yZE97kECvH0I?utm_source=generator" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" frameborder="0" allowfullscreen></iframe>
+  </div>
 
-    <!-- Right side content -->
-    <div id="text-content">
-      <div class="name-heart">
-        𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
-      </div>
-      <div class="tagline">i make stuff in blender</div>
-      <div class="social-buttons">
-        <a href="https://discord.com/users/987815885702041610" target="_blank" class="social-btn">Discord</a>
-        <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde?si=3256bf32dfab4499" target="_blank" class="social-btn">Spotify</a>
-        <a href="https://www.roblox.com/users/502463017/profile" target="_blank" class="social-btn">Roblox</a>
-      </div>
-
-      <div class="profile-container" style="margin-top: 20px; justify-content: center;">
-        <img src="chronia.png" alt="Chronia looking fine" class="main-image" id="profile-pic" />
-        <div id="visualizer">
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
-          <div class="bar"></div>
+  <div class="main-wrapper">
+    <div class="profile-container">
+      <img src="chronia.png" alt="Chronia looking fine" class="main-image" id="profile-pic" />
+      <div id="text-content">
+        <div class="name-heart">
+          𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
         </div>
+        <div class="tagline">i make stuff in blender</div>
+        <div class="social-buttons">
+          <a href="https://discord.com/users/987815885702041610" target="_blank" class="social-btn">Discord</a>
+          <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde?si=3256bf32dfab4499" target="_blank" class="social-btn">Spotify</a>
+          <a href="https://www.roblox.com/users/502463017/profile" target="_blank" class="social-btn">Roblox</a>
+        </div>
+      </div>
+      <div id="visualizer">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
       </div>
     </div>
   </div>
 
-  <!-- Audio player -->
   <audio id="background-audio" src="zenyata (mp3cut.net).mp3" autoplay loop></audio>
 
-  <!-- Mute Button -->
   <button id="mute-btn" title="Mute/Unmute Audio">🔊</button>
 
 <script>
-  // Custom cursor follow (always visible)
   const cursor = document.getElementById('custom-cursor');
   window.addEventListener('mousemove', e => {
     cursor.style.top = e.clientY + 'px';
     cursor.style.left = e.clientX + 'px';
   });
 
-  // Mute button toggle logic
   const audio = document.getElementById('background-audio');
   const muteBtn = document.getElementById('mute-btn');
 
