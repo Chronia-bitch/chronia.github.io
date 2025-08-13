@@ -3,20 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Chronia - Minimal</title>
-<link rel="icon" href="favicone2.ico" type="image/x-icon" />
+<title>Chronia - Minimal & Sexy</title>
+<link rel="icon" href="favicon.ico" type="image/x-icon" />
+
 <style>
   * {
     margin: 0; 
     padding: 0; 
     box-sizing: border-box;
   }
-
-  /* Hide normal cursor absolutely everywhere */
-  body, button, a, .social-btn, #profile-pic {
-    cursor: none !important;
-  }
-
   body {
     background: url('background.jpg') center/cover no-repeat fixed;
     color: #ff1ac6;
@@ -28,28 +23,9 @@
     align-items: center;
     flex-direction: column;
     text-align: center;
+    cursor: none; /* hide default */
     perspective: 1000px;
     transition: background-color 0.5s ease;
-    position: relative;
-  }
-
-  /* Background fade layers for morph effect */
-  #background-fade, #background-current {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -2;
-    transition: opacity 1s ease;
-  }
-  #background-current {
-    opacity: 1;
-    background-image: url('background.jpg');
-  }
-  #background-fade {
-    opacity: 0;
   }
 
   /* Custom Heart Cursor */
@@ -93,7 +69,7 @@
     box-shadow: 0 0 20px #ff1ac6;
     transition: box-shadow 0.4s ease, transform 0.3s ease;
     flex-shrink: 0;
-    cursor: none; /* keep hidden */
+    cursor: pointer;
   }
   .main-image:hover {
     box-shadow: 0 0 40px #ff66d9;
@@ -147,7 +123,7 @@
     color: #ff1ac6;
     font-weight: 600;
     border-radius: 20px;
-    cursor: none !important;
+    cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.3s ease;
     text-decoration: none;
@@ -171,7 +147,6 @@
     height: 60px;
     width: 200px;
     pointer-events: none;
-    margin-left: 20px;
   }
   .bar {
     width: 8px;
@@ -204,103 +179,208 @@
   @keyframes fadeIn {
     to { opacity: 1; }
   }
+
+  /* MP3 Player container next to profile */
+  .mp3-player {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    color: #ff1ac6;
+    user-select: none;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-left: 0.7rem;
+    width: 230px;
+  }
+  .mp3-player-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+  }
+  .mp3-player-controls button {
+    background: transparent;
+    border: 2px solid #ff1ac6;
+    border-radius: 10px;
+    color: #ff1ac6;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px 14px;
+    transition: all 0.3s ease;
+  }
+  .mp3-player-controls button:hover {
+    background: #ff1ac6;
+    color: #000;
+    box-shadow: 0 0 15px #ff66d9;
+    transform: scale(1.1);
+  }
+  .mp3-player-title {
+    font-size: 1.1rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Zen Mute Button on top left */
+  #zen-mute-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: transparent;
+    border: 2px solid #ff1ac6;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: #ff1ac6;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    transition: all 0.3s ease;
+    z-index: 10000;
+  }
+  #zen-mute-btn:hover {
+    background: #ff1ac6;
+    color: #000;
+    box-shadow: 0 0 15px #ff66d9;
+    transform: scale(1.1);
+  }
 </style>
 </head>
 <body>
 
-  <!-- Background layers for morph effect -->
-  <div id="background-current"></div>
-  <div id="background-fade"></div>
-
   <div id="custom-cursor"></div>
 
-  <div class="profile-container">
+  <div class="profile-container" style="gap: 10px;">
     <img src="chronia.png" alt="Chronia looking fine" class="main-image" id="profile-pic" />
-    <div style="display: flex; flex-direction: column; justify-content: center;">
-      <div class="name-heart" style="margin-left: 15px;">
-        𝕔𝕙𝕣𝕠𝕟𝕚𝕒 <span class="heart">❤︎</span>
-      </div>
-      <div class="tagline">i make stuff in blender</div>
-      <div class="social-buttons">
-        <a href="https://discord.com/users/987815885702041610" target="_blank" class="social-btn">Discord</a>
-        <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde?si=3256bf32dfab4499" target="_blank" class="social-btn">Spotify</a>
-        <a href="https://www.roblox.com/users/502463017/profile" target="_blank" class="social-btn">Roblox</a>
-      </div>
-    </div>
-
-    <!-- Visualizer next to pfp -->
     <div id="visualizer">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+    </div>
+    <div class="mp3-player">
+      <div class="mp3-player-title" id="current-song">Loading...</div>
+      <div class="mp3-player-controls">
+        <button id="prev-btn" title="Previous Song">&#9664;</button>
+        <button id="play-pause-btn" title="Play/Pause">&#9658;</button>
+        <button id="next-btn" title="Next Song">&#9654;</button>
+      </div>
     </div>
   </div>
 
-  <!-- Audio player -->
-  <audio id="background-audio" src="zenyata (mp3cut.net).mp3" autoplay loop></audio>
+  <button id="zen-mute-btn" title="Mute/Unmute Zen Music">&#128266;</button>
+
+  <!-- Zen music -->
+  <audio id="zen-audio" src="zen-music.mp3" loop autoplay></audio>
+
+  <!-- MP3 player audio -->
+  <audio id="mp3-audio"></audio>
 
 <script>
-  // Custom cursor follow (always visible)
+  // Custom heart cursor follow
   const cursor = document.getElementById('custom-cursor');
   window.addEventListener('mousemove', e => {
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
   });
 
-  // Shadow play: subtle shadow shift based on mouse movement
-  const profile = document.querySelector('.profile-container');
-  window.addEventListener('mousemove', e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 20; // max 20px shift
-    const y = (e.clientY / window.innerHeight - 0.5) * 20;
-    profile.style.filter = `drop-shadow(${x}px ${y}px 15px #ff1ac6)`;
+  // Playlist array (all your tracks)
+  const playlist = [
+    "₵ÜT 𐌼Y LIFË","Bloody Daisies","DANCE","₵ÜT 𐌼Y LIFË - Sped Up","BLACKTOP",
+    "Damsel In Distressed Jeans","RUN","ETERNAL LOVE","POISON","Boy Band","MIND",
+    "₵ÜT 𐌼Y LIFË - Slowed & Reverbed","LIFE","CHROME BERETTA","FLOW","JENNI",
+    "THERAPY","Eeyuh! (Revenge Remix)","HIT ME","I LOVE YOU SO","Pop Out","ARTICHOKE",
+    "KILLA","OLIVIA","XXXKIRBY","JENNI - Sped Up","KAIJU","ILY BABY","ZONIN","POP OUT",
+    "March!","LAZERBEAMS","GRUNK (feat. Yung Kage, XANAKIN SKYWOK, & Sadfriendd)","Pop Out",
+    "TEEN TITANS BLOW","FILL ME UP","Pokeballer","Knockout","B.O.Y.S.N.E.X.T.D.O.O.R.","XXXMETAKNIGHT",
+    "BUDLIGHT","WILLYPACK","Milkshake","GLADIATOR","SNOOPIN","KEEP IT UP","COWBOY BLUEBALLS",
+    "Shalom!","Flowers On Your Grave","Vladimir Putin DISS TRACK","XXXDISCORD","ALRIGHT*",
+    "Tylenol","#FreeRobuxIfYouShareSong_draft_v2","Homiesexual","Shimmy!","I TOOK A PERC",
+    "Pockets Stuffin'","12 O'BLOCK","Rolli Rolli","MISS THE RAGE - Remix","I LOVE YOU SO","So Wassup?"
+  ];
+
+  // Map track name to a dummy mp3 file path (in real use, you'd replace these paths with real mp3 urls)
+  // For demo, using a sample mp3 or silence for each track
+  const trackFiles = playlist.map((title, i) => `tracks/track${i+1}.mp3`);
+
+  const zenAudio = document.getElementById('zen-audio');
+  const mp3Audio = document.getElementById('mp3-audio');
+  const currentSongEl = document.getElementById('current-song');
+  const playPauseBtn = document.getElementById('play-pause-btn');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const zenMuteBtn = document.getElementById('zen-mute-btn');
+
+  let currentIndex = 0;
+  let isPlaying = false;
+  let zenMuted = false;
+
+  // Load initial song into MP3 player but don't autoplay yet
+  function loadSong(index) {
+    currentIndex = index;
+    mp3Audio.src = trackFiles[index];
+    currentSongEl.textContent = playlist[index];
+    mp3Audio.pause();
+    isPlaying = false;
+    playPauseBtn.textContent = '▶'; // play icon
+  }
+
+  function playSong() {
+    if (zenMuted) zenAudio.pause();
+    mp3Audio.play();
+    isPlaying = true;
+    playPauseBtn.textContent = '❚❚'; // pause icon
+  }
+
+  function pauseSong() {
+    mp3Audio.pause();
+    isPlaying = false;
+    playPauseBtn.textContent = '▶'; // play icon
+    if (!zenMuted) zenAudio.play();
+  }
+
+  playPauseBtn.addEventListener('click', () => {
+    if (isPlaying) pauseSong();
+    else playSong();
   });
 
-  // Fix smooth parallax effect on profile container
-  window.addEventListener('mousemove', e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 10; // rotate max 10deg
-    const y = (e.clientY / window.innerHeight - 0.5) * 10;
-    profile.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
+  prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+    loadSong(currentIndex);
+    playSong();
   });
 
-  // Background morphing on profile pic click
-  const backgrounds = ['background.jpg', 'background2.jpg'];
-  let bgIndex = 0;
-  const bgCurrent = document.getElementById('background-current');
-  const bgFade = document.getElementById('background-fade');
-
-  document.getElementById('profile-pic').addEventListener('click', () => {
-    bgIndex = (bgIndex + 1) % backgrounds.length;
-    // Set fade layer background image and fade it in
-    bgFade.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
-    bgFade.style.opacity = '1';
-
-    // After fade, swap images and hide fade layer
-    setTimeout(() => {
-      bgCurrent.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
-      bgFade.style.opacity = '0';
-    }, 1000); // matches CSS transition duration
+  nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % playlist.length;
+    loadSong(currentIndex);
+    playSong();
   });
 
-  // Audio Visualizer bars fake pulse synced with time
-  const bars = document.querySelectorAll('#visualizer .bar');
-  let pulseIndex = 0;
-  setInterval(() => {
-    bars.forEach((bar, i) => {
-      const delay = (i + pulseIndex) % bars.length;
-      const scale = 15 + 45 * Math.abs(Math.sin(Date.now() / 300 + delay));
-      bar.style.height = scale + 'px';
-      bar.style.opacity = 0.5 + 0.5 * Math.abs(Math.sin(Date.now() / 300 + delay));
-    });
-    pulseIndex = (pulseIndex + 1) % bars.length;
-  }, 100);
+  zenMuteBtn.addEventListener('click', () => {
+    zenMuted = !zenMuted;
+    if (zenMuted) {
+      zenAudio.pause();
+      zenMuteBtn.textContent = '🔇';
+    } else {
+      if (!isPlaying) zenAudio.play();
+      zenMuteBtn.textContent = '🔊';
+    }
+  });
 
+  // Initialize
+  loadSong(0);
+
+  // If zen music ends or errors, just keep looping (it's already looped, but just in case)
+  zenAudio.addEventListener('ended', () => zenAudio.play());
+
+  // If mp3 ends, auto-next song
+  mp3Audio.addEventListener('ended', () => {
+    currentIndex = (currentIndex + 1) % playlist.length;
+    loadSong(currentIndex);
+    playSong();
+  });
 </script>
 
 </body>
