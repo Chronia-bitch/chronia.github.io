@@ -31,6 +31,8 @@
     perspective: 1000px;
     transition: background-color 0.5s ease;
     position: relative;
+    opacity: 0;
+    animation: fadeIn 1.5s forwards ease-in;
   }
 
   /* Background fade layers for morph effect */
@@ -197,10 +199,6 @@
   }
 
   /* Fade in on load */
-  body {
-    opacity: 0;
-    animation: fadeIn 1.5s forwards ease-in;
-  }
   @keyframes fadeIn {
     to { opacity: 1; }
   }
@@ -214,6 +212,25 @@
 
   <div id="custom-cursor"></div>
 
+  <!-- Mute/unmute button -->
+  <button id="mute-btn" aria-label="Mute audio" title="Mute/Unmute" style="
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: #ff1ac6;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #ff66d9;
+    color: #000;
+    font-weight: bold;
+    font-size: 18px;
+    user-select: none;
+    z-index: 10000;
+  ">🔊</button>
+
   <div class="profile-container">
     <img src="chronia.png" alt="Chronia looking fine" class="main-image" id="profile-pic" />
     <div style="display: flex; flex-direction: column; justify-content: center;">
@@ -226,13 +243,12 @@
         <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde?si=3256bf32dfab4499" target="_blank" class="social-btn">Spotify</a>
         <a href="https://www.roblox.com/users/502463017/profile" target="_blank" class="social-btn">Roblox</a>
       </div>
+
+      <!-- Spotify Playlist Embed -->
+      <div style="margin-top: 20px; width: 100%; max-width: 400px; margin-left: auto; margin-right: auto;">
+        <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6Be2y9JUy7yZE97kECvH0I?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      </div>
     </div>
-
-
-<!-- Spotify Playlist Embed -->
-<div style="margin-top: 20px; width: 100%; max-width: 400px; margin-left: auto; margin-right: auto;">
-  <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/playlist/6Be2y9JUy7yZE97kECvH0I?utm_source=generator" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-</div>
 
     <!-- Visualizer next to pfp -->
     <div id="visualizer">
@@ -270,43 +286,36 @@
 
   // Fix smooth parallax effect on profile container
   window.addEventListener('mousemove', e => {
-    const x = (e.clientX / window.innerWidth - 0.5) * 10; // rotate max 10deg
-    const y = (e.clientY / window.innerHeight - 0.5) * 10;
-    profile.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
+    const x = (e.clientX / window.innerWidth - 0.5) * 5; // subtle 5px transform max
+    const y = (e.clientY / window.innerHeight - 0.5) * 5;
+    profile.style.transform = `translate(${x}px, ${y}px)`;
   });
 
-  // Background morphing on profile pic click
-  const backgrounds = ['background.jpg', 'background2.jpg'];
-  let bgIndex = 0;
-  const bgCurrent = document.getElementById('background-current');
-  const bgFade = document.getElementById('background-fade');
-
-  document.getElementById('profile-pic').addEventListener('click', () => {
-    bgIndex = (bgIndex + 1) % backgrounds.length;
-    // Set fade layer background image and fade it in
-    bgFade.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
-    bgFade.style.opacity = '1';
-
-    // After fade, swap images and hide fade layer
-    setTimeout(() => {
-      bgCurrent.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
-      bgFade.style.opacity = '0';
-    }, 1000); // matches CSS transition duration
-  });
-
-  // Audio Visualizer bars fake pulse synced with time
-  const bars = document.querySelectorAll('#visualizer .bar');
-  let pulseIndex = 0;
+  // Background morph effect (fade between two backgrounds every 5 seconds)
+  let current = document.getElementById('background-current');
+  let fade = document.getElementById('background-fade');
+  let backgrounds = [
+    'url("background.jpg")',
+    'url("background2.jpg")'
+  ];
+  let index = 0;
   setInterval(() => {
-    bars.forEach((bar, i) => {
-      const delay = (i + pulseIndex) % bars.length;
-      const scale = 15 + 45 * Math.abs(Math.sin(Date.now() / 300 + delay));
-      bar.style.height = scale + 'px';
-      bar.style.opacity = 0.5 + 0.5 * Math.abs(Math.sin(Date.now() / 300 + delay));
-    });
-    pulseIndex = (pulseIndex + 1) % bars.length;
-  }, 100);
+    fade.style.backgroundImage = backgrounds[index];
+    fade.style.opacity = '1';
+    setTimeout(() => {
+      current.style.backgroundImage = backgrounds[index];
+      fade.style.opacity = '0';
+      index = (index + 1) % backgrounds.length;
+    }, 1000);
+  }, 5000);
 
+  // Mute/unmute button functionality
+  const muteBtn = document.getElementById('mute-btn');
+  const audio = document.getElementById('background-audio');
+  muteBtn.addEventListener('click', () => {
+    audio.muted = !audio.muted;
+    muteBtn.textContent = audio.muted ? '🔇' : '🔊';
+  });
 </script>
 
 </body>
