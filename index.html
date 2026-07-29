@@ -10,11 +10,11 @@
 <style>
   :root{
     --purple: #9d7bc0;
-    --accent-white: rgba(255, 255, 255, 0.8);
+    --white-accent: #ffffff;
     --black: #020202;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glow: rgba(157, 123, 192, 0.2);
+    --glass-bg: rgba(255,255,255,0.03);
+    --glass-border: rgba(255,255,255,0.12);
+    --glow: rgba(157, 123, 192, 0.25);
   }
 
   *{ box-sizing:border-box; margin:0; padding:0; }
@@ -22,7 +22,7 @@
   html,body{
     height:100%;
     width:100%;
-    overflow:hidden;
+    overflow-x:hidden;
     background:var(--black);
     font-family:'Inter', sans-serif;
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="9" stroke="white" stroke-width="1.5"/><line x1="12" y1="15" x2="12" y2="22" stroke="white" stroke-width="1.5"/><line x1="2" y1="12" x2="9" y2="12" stroke="white" stroke-width="1.5"/><line x1="15" y1="12" x2="22" y2="12" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="1.6" fill="white"/></svg>') 12 12, crosshair;
@@ -33,143 +33,274 @@
   /* ================= BACKGROUND SYSTEM ================= */
   .bg-gradient{
     position:fixed; inset:0; z-index:0;
-    background: radial-gradient(circle at 0% 0%, var(--purple) 0%, transparent 45%),
-                radial-gradient(circle at 100% 100%, rgba(255,255,255,0.04) 0%, transparent 45%),
-                var(--black);
+    background: linear-gradient(
+      90deg,
+      var(--purple) 0%,
+      var(--black) 45%,
+      var(--black) 55%,
+      rgba(255,255,255,0.1) 100%
+    );
   }
 
   .bg-dots{
     position:fixed; inset:0; z-index:1;
-    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.4px);
+    background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1.4px);
     background-size: 30px 30px;
     pointer-events:none;
   }
 
   .bg-scanlines{
     position:fixed; inset:0; z-index:2;
-    background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 3px);
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.2) 0px,
+      rgba(0,0,0,0.2) 1px,
+      transparent 1px,
+      transparent 3px
+    );
     mix-blend-mode: overlay;
     pointer-events:none;
   }
 
   .flare{
     position:fixed; z-index:1;
-    width:50vw; height:50vw;
+    width:46vw; height:46vw;
     border-radius:50%;
-    filter: blur(160px);
-    opacity:0.15;
+    filter: blur(140px);
+    opacity:0.25;
     pointer-events:none;
   }
-  .flare.purple{ top:-10%; left:-10%; background:var(--purple); }
-  .flare.white{ bottom:-10%; right:-10%; background: #fff; }
+  .flare.purple{ top:-10%; left:-12%; background:var(--purple); }
+  .flare.white{ bottom:-14%; right:-12%; background:var(--white-accent); }
 
+  /* ================= PARTICLES ================= */
   .particle-layer{
     position:fixed; inset:0; z-index:4;
     pointer-events:none; overflow:hidden;
   }
   .particle{
     position:absolute;
-    width:2px; height:2px;
+    width:3px; height:3px;
     background:#fff;
     border-radius:50%;
     opacity:0;
-    box-shadow:0 0 4px 1px rgba(255,255,255,0.3);
+    box-shadow:0 0 6px 1px rgba(255,255,255,0.6);
   }
 
-  /* ================= WATERMARK ================= */
+  /* ================= HEADER / WATERMARK ================= */
   .watermark{
-    position:fixed; inset:0; z-index:5;
-    display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    text-align:center; pointer-events:none;
+    position:fixed;
+    inset:0;
+    z-index:5;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    pointer-events:none;
   }
   .watermark h1{
     font-family:'Pinyon Script', cursive;
+    font-weight:400;
     font-size: clamp(90px, 16vw, 220px);
-    color: rgba(255,255,255,0.05);
-    line-height:1; display:flex; align-items:center; gap:0.25em;
+    color: rgba(255,255,255,0.08);
+    line-height:1;
+    display:flex;
+    align-items:center;
+    gap:0.25em;
+  }
+  .watermark .heart{
+    font-size:0.34em;
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.3));
+    -webkit-text-fill-color: rgba(255,255,255,0.5);
   }
   .watermark .sub{
-    margin-top:6px; font-family:'VT323', monospace;
-    letter-spacing:0.5em; font-size:18px;
-    color: rgba(255,255,255,0.25);
+    margin-top:6px;
+    font-family:'VT323', monospace;
+    letter-spacing:0.5em;
+    text-transform:lowercase;
+    font-size:18px;
+    color: rgba(255,255,255,0.4);
   }
 
   /* ================= HERO CARD (LIQUID GLASS) ================= */
   .stage{
-    position:relative; z-index:6;
-    min-height:100vh; display:flex;
-    align-items:center; justify-content:center;
-    padding:40px 20px; perspective: 1500px;
+    position:relative;
+    z-index:6;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 20px;
+    perspective: 1200px;
   }
 
   .card{
-    position:relative; width:100%; max-width:380px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%);
-    backdrop-filter: blur(50px) saturate(180%);
-    -webkit-backdrop-filter: blur(50px) saturate(180%);
+    position:relative;
+    width:100%;
+    max-width:380px;
+    background:
+      linear-gradient(155deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.01) 28%, rgba(255,255,255,0.04) 100%),
+      var(--glass-bg);
+    backdrop-filter: blur(40px) saturate(160%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
     border: 1px solid var(--glass-border);
     border-radius:44px;
-    padding:40px 30px;
-    display:flex; flex-direction:column; align-items:center;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.15);
+    padding:42px 30px 30px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    box-shadow:
+      0 24px 70px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(255,255,255,0.02) inset,
+      0 1px 0 rgba(255,255,255,0.25) inset,
+      0 40px 50px -30px var(--glow);
     transform-style: preserve-3d;
-    transition: box-shadow .5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: box-shadow .35s ease;
     overflow:hidden;
   }
 
-  .card::after{
-    content:""; position:absolute; inset:0; border-radius:44px; padding:1px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.1) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor; mask-composite: exclude; pointer-events:none;
+  /* REPLACED THE "ARTIFACT" WITH LIQUID GLASS SHEEN */
+  .card::before{
+    content:"";
+    position:absolute;
+    top: -20%; left: -20%;
+    width: 140%; height: 140%;
+    background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15) 0%, transparent 40%);
+    pointer-events:none;
+    z-index:0;
   }
+
+  .card::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:44px;
+    padding:1px;
+    background: linear-gradient(155deg, rgba(255,255,255,0.45), rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.2));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events:none;
+  }
+
+  .card > *{ position:relative; z-index:1; }
 
   .avatar-wrap{
-    position:relative; width:120px; height:120px; margin-bottom:24px;
+    position:relative;
+    width:132px; height:132px;
+    margin-bottom:24px;
+  }
+  .avatar-aura{
+    position:absolute; inset:-16px;
+    border-radius:34px;
+    background: radial-gradient(circle, var(--purple), rgba(255,255,255,0) 70%);
+    filter: blur(16px);
+    animation: aura-pulse 3.6s ease-in-out infinite;
+    z-index:0;
+    opacity: 0.4;
+  }
+  @keyframes aura-pulse{
+    0%,100%{ opacity:0.3; transform:scale(1); }
+    50%{ opacity:0.5; transform:scale(1.08); }
   }
   .avatar{
-    position:relative; z-index:1; width:100%; height:100%;
-    object-fit:cover; border-radius:34px;
-    border: 1.5px solid rgba(255,255,255,0.7);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position:relative;
+    z-index:1;
+    width:100%; height:100%;
+    object-fit:cover;
+    border-radius:28px;
+    border:1.5px solid rgba(255,255,255,0.9);
+    display:block;
+    background: linear-gradient(135deg, var(--purple), #fff);
+    box-shadow: 0 0 24px rgba(255,255,255,0.15);
   }
 
-  .name{ font-family:'VT323', monospace; font-size:28px; letter-spacing:3px; color:#fff; }
-  .tagline{ margin-top:4px; font-family:'VT323', monospace; font-size:15px; letter-spacing:2px; color: rgba(255,255,255,0.4); }
+  .name{
+    font-family:'VT323', monospace;
+    font-size:28px;
+    letter-spacing:3px;
+    color:#fff;
+    text-shadow: 0 0 10px rgba(255,255,255,0.25);
+  }
+  .tagline{
+    margin-top:4px;
+    font-family:'VT323', monospace;
+    font-size:15px;
+    letter-spacing:2px;
+    color: rgba(255,255,255,0.45);
+    text-transform:lowercase;
+  }
 
-  .dock{ margin-top:30px; width:100%; display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
+  .dock{
+    margin-top:28px;
+    width:100%;
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+  }
   .pill{
-    display:flex; align-items:center; justify-content:center; gap:8px;
-    padding:14px 10px; border-radius:18px;
-    border:1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04);
-    color:#fff; text-decoration:none; font-family:'Inter', sans-serif; font-size:13px; font-weight:500;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:12px 10px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.04);
+    color:#fff;
+    text-decoration:none;
+    font-family:'Inter', sans-serif;
+    font-size:13px;
+    font-weight:500;
     transition: all .3s ease;
   }
-  .pill:hover{ background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+  .pill svg{ width:16px; height:16px; flex-shrink:0; }
+  .pill:hover{
+    transform: translateY(-3px);
+    border-color: var(--purple);
+    background: rgba(157, 123, 192, 0.15);
+    box-shadow: 0 8px 24px rgba(157, 123, 192, 0.25);
+  }
 
   .visualizer-wrap{
-    margin-top:30px; width:100%; height:50px;
-    border-radius:18px; border:1px solid rgba(255,255,255,0.08);
-    background: rgba(0,0,0,0.15); overflow:hidden;
+    margin-top:28px;
+    width:100%;
+    height:56px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.2);
+    overflow:hidden;
   }
-  #viz{ width:100%; height:100%; display:block; filter: drop-shadow(0 0 5px rgba(255,255,255,0.5)); }
+  #viz{ width:100%; height:100%; display:block; filter: drop-shadow(0 0 8px var(--purple)); }
 
-  /* ================= SOUND TOGGLE (FIXED SIZE & CENTERED) ================= */
+  /* ================= SOUND TOGGLE (FIXED) ================= */
   .sound-toggle{
-    position:fixed; top:24px; right:24px; z-index:20;
-    width:38px; height:38px; /* Smaller icon size */
-    border-radius:12px;
-    border:1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(15px);
+    position:fixed;
+    top:24px; right:24px;
+    z-index:20;
+    width:40px; height:40px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
     color:#fff;
-    display:flex; align-items:center; justify-content:center; /* Perfect Centering */
+    display:flex;
+    align-items:center;
+    justify-content:center;
     transition: all .3s ease;
+    padding: 0;
   }
-  .sound-toggle svg{ width:18px; height:18px; display: block; } /* Consistent SVG size */
-  .sound-toggle:hover{ background: rgba(255,255,255,0.15); border-color: var(--purple); }
+  .sound-toggle svg{ width:18px; height:18px; display: block; margin: auto;}
+  .sound-toggle:hover{
+    border-color: var(--purple);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 18px var(--glow);
+  }
 
+  @media (max-width: 420px){
+    .watermark h1{ font-size: 22vw; }
+  }
 </style>
 </head>
 <body>
@@ -187,30 +318,33 @@
   </div>
 
   <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound">
-    <svg id="iconOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-      <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+    <svg id="iconOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
     </svg>
-    <svg id="iconOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
-      <line x1="23" y1="9" x2="17" y2="15"></line>
-      <line x1="17" y1="9" x2="23" y2="15"></line>
+    <svg id="iconOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/>
+      <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
     </svg>
   </button>
 
   <div class="stage">
     <div class="card" id="card">
       <div class="avatar-wrap">
-        <img class="avatar" src="chronia5.jpg" alt="chronia">
+        <div class="avatar-aura"></div>
+        <img class="avatar" src="chronia5.jpg" alt="chronia" onerror="this.style.objectFit='contain'; this.alt='chronia5.jpg not found';">
       </div>
+
       <div class="name">chronia</div>
       <div class="tagline">yeah</div>
+
       <div class="dock">
-        <a class="pill" href="#">Discord</a>
-        <a class="pill" href="#">Spotify</a>
-        <a class="pill" href="#">𝕏</a>
-        <a class="pill" href="#">Roblox</a>
+        <a class="pill" href="#" target="_blank" rel="noopener">Discord</a>
+        <a class="pill" href="#" target="_blank" rel="noopener">Spotify</a>
+        <a class="pill" href="#" target="_blank" rel="noopener">𝕏</a>
+        <a class="pill" href="#" target="_blank" rel="noopener">Roblox</a>
       </div>
+
       <div class="visualizer-wrap">
         <canvas id="viz"></canvas>
       </div>
@@ -220,51 +354,114 @@
   <audio id="bgAudio" loop preload="auto"></audio>
 
   <script>
-    // ============= DUST PARTICLES (IMMEDIATE SPAWN) =============
+    // ============= PARTICLE SYSTEM (SCATTERED ON START) =============
     const particleLayer = document.getElementById('particleLayer');
+    const NUM_PARTICLES = 44;
     const particles = [];
-    for(let i=0; i<50; i++){
+
+    function makeParticle(isInitial = false){
       const el = document.createElement('div');
       el.className = 'particle';
       particleLayer.appendChild(el);
-      const p = {
-        el, x: Math.random()*100, 
-        y: Math.random()*110, // Randomized Y to ensure dust is on screen at start
-        speed: 0.02 + Math.random()*0.04,
-        opacity: 0
+      return {
+        el,
+        x: Math.random()*100,
+        y: isInitial ? Math.random()*110 : 115, // Scatter across screen on load
+        speed: 0.02 + Math.random()*0.045,
+        drift: (Math.random()-0.5)*0.02,
+        size: 2 + Math.random()*3
       };
-      particles.push(p);
+    }
+
+    for(let i=0;i<NUM_PARTICLES;i++){
+      particles.push(makeParticle(true));
     }
 
     function animateParticles(){
       particles.forEach(p=>{
         p.y -= p.speed;
-        if(p.y < -5) p.y = 105;
-        let o = 1;
-        if(p.y > 90) o = (105-p.y)/15;
-        else if(p.y < 15) o = p.y/15;
-        p.el.style.transform = `translate(${p.x}vw, ${p.y}vh)`;
-        p.el.style.opacity = Math.max(0, o) * 0.4;
+        p.x += p.drift;
+        if(p.y < -10){
+          p.y = 115;
+          p.x = Math.random()*100;
+        }
+        let opacity = 1;
+        if(p.y > 100) opacity = 1 - (p.y - 100)/15;
+        else if(p.y < 12) opacity = p.y/12;
+
+        p.el.style.left = p.x + 'vw';
+        p.el.style.top = p.y + 'vh';
+        p.el.style.width = p.size + 'px';
+        p.el.style.height = p.size + 'px';
+        p.el.style.opacity = Math.max(0, Math.min(1, opacity)) * 0.55;
       });
       requestAnimationFrame(animateParticles);
     }
     animateParticles();
 
-    // ============= CENTER-OUT LIQUID VISUALIZER =============
-    const AUDIO_SRC = "song.mp3";
+    // ============= PARALLAX TILT =============
+    const card = document.getElementById('card');
+    let hoveringCard = false;
+    let targetRotX = 0, targetRotY = 0, targetScale = 1;
+    let curRotX = 0, curRotY = 0, curScale = 1;
+
+    card.addEventListener('mouseenter', ()=>{ hoveringCard = true; });
+    card.addEventListener('mouseleave', ()=>{ hoveringCard = false; });
+
+    window.addEventListener('mousemove', (e)=>{
+      const rect = card.getBoundingClientRect();
+      const cx = rect.left + rect.width/2;
+      const cy = rect.top + rect.height/2;
+
+      if(hoveringCard){
+        const relX = (e.clientX - rect.left)/rect.width - 0.5;
+        const relY = (e.clientY - rect.top)/rect.height - 0.5;
+        targetRotY = relX * 18;
+        targetRotX = -relY * 18;
+        targetScale = 1.015;
+      } else {
+        const relX = (e.clientX - cx)/window.innerWidth;
+        const relY = (e.clientY - cy)/window.innerHeight;
+        targetRotY = relX * 5;
+        targetRotX = -relY * 5;
+        targetScale = 1;
+      }
+    });
+
+    function tickTilt(){
+      curRotX += (targetRotX - curRotX) * 0.08;
+      curRotY += (targetRotY - curRotY) * 0.08;
+      curScale += (targetScale - curScale) * 0.08;
+      card.style.transform = `rotateX(${curRotX}deg) rotateY(${curRotY}deg) scale(${curScale})`;
+      requestAnimationFrame(tickTilt);
+    }
+    tickTilt();
+
+    // ============= LIQUID MIRRORED VISUALIZER =============
     const audio = document.getElementById('bgAudio');
-    audio.src = AUDIO_SRC;
+    audio.src = "song.mp3"; 
+
+    const soundToggle = document.getElementById('soundToggle');
     const canvas = document.getElementById('viz');
     const ctx = canvas.getContext('2d');
     let audioCtx, analyser, source, dataArray;
-    let smoothed = new Array(32).fill(0);
+    let started = false;
+    let muted = true;
 
-    function resize(){
-      canvas.width = canvas.clientWidth * devicePixelRatio;
-      canvas.height = canvas.clientHeight * devicePixelRatio;
+    const SAMPLE_POINTS = 32; 
+    let smoothed = new Array(SAMPLE_POINTS).fill(0);
+
+    function initAudio(){
+      if(audioCtx) return;
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      source = audioCtx.createMediaElementSource(audio);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 128; 
+      analyser.smoothingTimeConstant = 0.75;
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
     }
-    window.addEventListener('resize', resize);
-    resize();
 
     function drawViz(){
       requestAnimationFrame(drawViz);
@@ -272,79 +469,54 @@
       if(!analyser) return;
 
       analyser.getByteFrequencyData(dataArray);
+
       const w = canvas.width, h = canvas.height;
-      const centerX = w / 2;
-      const barCount = 18; // Per side
-      const barWidth = 4 * devicePixelRatio;
-      const spacing = 6 * devicePixelRatio;
+      const barWidth = (w / (SAMPLE_POINTS * 2)) * 0.75;
+      const gap = (w / (SAMPLE_POINTS * 2)) * 0.25;
 
       ctx.fillStyle = '#fff';
 
-      for(let i=0; i < barCount; i++){
-        // Use lower frequency data (bass/mids) for more movement
-        const raw = dataArray[i] / 255;
-        // Smoothing formula for "liquid" feel
-        smoothed[i] += (raw - smoothed[i]) * 0.15; 
+      for(let i=0; i<SAMPLE_POINTS; i++){
+        // Frequency data focused on lower/mid ranges (0-30)
+        let target = (dataArray[i] / 255) * h * 0.8;
+        // Higher interpolation (0.12) makes it less stiff/more fluid
+        smoothed[i] += (target - smoothed[i]) * 0.12;
         
-        const barHeight = Math.max(4, smoothed[i] * h * 0.9);
-        
-        // Draw Right
+        let bh = Math.max(4, smoothed[i]);
+
+        // Right side (middle -> end)
         ctx.beginPath();
-        ctx.roundRect(centerX + (i * spacing), (h - barHeight)/2, barWidth, barHeight, 10);
+        ctx.roundRect(w/2 + i*(barWidth+gap), h/2 - bh/2, barWidth, bh, 20);
         ctx.fill();
-        
-        // Draw Left (Mirrored)
-        if(i > 0) {
-            ctx.beginPath();
-            ctx.roundRect(centerX - (i * spacing) - barWidth, (h - barHeight)/2, barWidth, barHeight, 10);
-            ctx.fill();
-        }
+
+        // Left side (middle -> start)
+        ctx.beginPath();
+        ctx.roundRect(w/2 - barWidth - i*(barWidth+gap), h/2 - bh/2, barWidth, bh, 20);
+        ctx.fill();
       }
     }
-    drawViz();
 
-    // ============= SOUND SYSTEM =============
-    const soundToggle = document.getElementById('soundToggle');
-    const iconOn = document.getElementById('iconOn');
-    const iconOff = document.getElementById('iconOff');
-    let started = false, muted = true;
-
-    function startAudio(){
-      if(started) return;
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 256;
-      analyser.smoothingTimeConstant = 0.8;
-      dataArray = new Uint8Array(analyser.frequencyBinCount);
-      source = audioCtx.createMediaElementSource(audio);
-      source.connect(analyser);
-      analyser.connect(audioCtx.destination);
-      audio.volume = 0.5;
-      audio.play();
-      started = true; muted = false;
-      iconOn.style.display='block'; iconOff.style.display='none';
+    function resizeCanvas(){
+      canvas.width = canvas.clientWidth * 2;
+      canvas.height = canvas.clientHeight * 2;
     }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    drawViz();
 
     soundToggle.addEventListener('click', (e)=>{
       e.stopPropagation();
-      if(!started) { startAudio(); return; }
-      if(muted){
+      initAudio();
+      if(audio.paused){
         audio.play(); muted = false;
-        iconOn.style.display='block'; iconOff.style.display='none';
       } else {
         audio.pause(); muted = true;
-        iconOn.style.display='none'; iconOff.style.display='block';
       }
+      document.getElementById('iconOn').style.display = muted ? 'none' : 'block';
+      document.getElementById('iconOff').style.display = muted ? 'block' : 'none';
     });
 
-    // ============= PARALLAX =============
-    const card = document.getElementById('card');
-    window.addEventListener('mousemove', (e)=>{
-      const rect = card.getBoundingClientRect();
-      const x = (e.clientX - (rect.left + rect.width/2)) / 15;
-      const y = (e.clientY - (rect.top + rect.height/2)) / 15;
-      card.style.transform = `rotateX(${-y}deg) rotateY(${x}deg)`;
-    });
+    document.body.addEventListener('click', ()=>{ if(!started) { initAudio(); started = true; } }, { once:true });
   </script>
 </body>
 </html>
