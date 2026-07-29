@@ -9,10 +9,10 @@
     
     <style>
         :root {
-            --bg-dark: #070707;
+            --bg-dark: #050505;
             --accent-purple: #9d4edd;
             --accent-orange: #ff9100;
-            --glass: rgba(255, 255, 255, 0.03);
+            --glass: rgba(255, 255, 255, 0.02);
             --border: rgba(255, 255, 255, 0.1);
         }
 
@@ -31,128 +31,129 @@
             overflow: hidden;
         }
 
-        /* Parallax Background Layer */
-        #bg-layer {
+        /* 1. RETRO DOTS & LIGHT FLARES */
+        .background-container {
             position: fixed;
-            top: -10%; left: -10%;
-            width: 120%; height: 120%;
-            /* Replace with your NY Noir Image Link */
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
-                        url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); 
-            background-size: cover;
+            width: 110%; height: 110%;
+            top: -5%; left: -5%;
             z-index: -1;
-            transition: transform 0.1s ease-out;
+            /* The Dot Grid */
+            background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
         }
 
-        /* Mouse Shimmer Effect */
+        /* Permanent Visible Lights */
+        .flare {
+            position: absolute;
+            width: 60vw; height: 60vw;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.25;
+            pointer-events: none;
+        }
+        .flare-purple { top: -10%; left: -10%; background: var(--accent-purple); }
+        .flare-orange { bottom: -10%; right: -10%; background: var(--accent-orange); }
+
+        /* 2. MOUSE SHIMMER */
         #shimmer {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             pointer-events: none;
             background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
-                        rgba(157, 78, 221, 0.15) 0%, 
-                        rgba(255, 145, 0, 0.05) 25%, 
-                        transparent 50%);
+                        rgba(157, 78, 221, 0.2) 0%, 
+                        transparent 40%);
             z-index: 0;
         }
 
-        /* The Silent Header */
+        /* 3. SILENT PINYON HEADER */
         .silent-header {
             position: absolute;
             top: 15%;
             width: 100%;
             text-align: center;
             font-family: 'Pinyon Script', cursive;
-            font-size: clamp(3rem, 12vw, 9rem);
-            color: rgba(255, 255, 255, 0.08);
-            text-shadow: 0 0 20px rgba(157, 78, 221, 0.2);
+            font-size: clamp(3rem, 12vw, 10rem);
+            color: rgba(255, 255, 255, 0.1);
             z-index: 1;
             pointer-events: none;
+            user-select: none;
         }
 
-        /* Audio Visualizer Canvas */
-        #visualizer {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 40px;
-            opacity: 0.6;
+        /* 4. GLASS CARD */
+        .wrapper {
+            height: 100vh; display: flex;
+            justify-content: center; align-items: center;
         }
 
-        /* Main Glass Card */
         .glass-card {
-            position: relative;
             background: var(--glass);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--border);
-            border-radius: 35px;
+            border-radius: 40px;
             padding: 50px;
             width: 90%;
-            max-width: 440px;
+            max-width: 420px;
             text-align: center;
             z-index: 10;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(157, 78, 221, 0.1);
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
             transition: transform 0.1s ease-out;
         }
 
-        /* Avatar with White Glow */
+        /* White Glow Avatar */
         .avatar {
-            width: 150px;
-            height: 150px;
-            border-radius: 25px;
-            border: 2px solid rgba(255,255,255,0.8);
+            width: 140px; height: 140px;
+            border-radius: 20px;
+            border: 2px solid white;
             object-fit: cover;
-            margin-bottom: 25px;
-            box-shadow: 0 0 35px 5px rgba(255, 255, 255, 0.6), 
-                        0 0 60px rgba(157, 78, 221, 0.4);
+            margin-bottom: 20px;
+            /* Strong White "Aura" Glow */
+            box-shadow: 0 0 25px 5px rgba(255, 255, 255, 0.5), 
+                        0 0 50px rgba(157, 78, 221, 0.3);
         }
 
-        .subtext { font-size: 1.3rem; color: #aaa; margin-bottom: 35px; }
+        .subtext { font-size: 1.3rem; color: #888; margin-bottom: 35px; }
 
-        /* Social Icons Grid */
+        /* Social Icons */
         .social-dock { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         
         .social-btn {
             display: flex; align-items: center; justify-content: center;
             padding: 12px; background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border); border-radius: 15px;
+            border: 1px solid var(--border); border-radius: 12px;
             text-decoration: none; color: white; transition: 0.3s;
         }
 
         .social-btn:hover {
             border-color: var(--accent-purple);
             background: rgba(157, 78, 221, 0.1);
-            box-shadow: 0 0 15px rgba(157, 78, 221, 0.3);
             transform: translateY(-2px);
         }
 
         .social-btn svg { width: 18px; height: 18px; margin-right: 10px; fill: white; }
 
-        /* Audio Mute Button */
-        #mute-toggle {
-            position: fixed;
-            top: 20px; right: 20px;
-            background: none; border: none;
-            color: white; font-size: 24px;
-            opacity: 0.5; transition: 0.3s;
-            z-index: 100;
+        /* Audio Visualizer */
+        #visualizer {
+            width: 100%; height: 30px;
+            margin-top: 25px; opacity: 0.4;
         }
-        #mute-toggle:hover { opacity: 1; transform: scale(1.1); }
 
-        /* Page Centering */
-        .wrapper {
-            height: 100vh; display: flex;
-            justify-content: center; align-items: center;
+        #mute-toggle {
+            position: fixed; top: 25px; right: 25px;
+            background: none; border: none; color: white;
+            font-size: 24px; opacity: 0.4; transition: 0.3s; z-index: 100;
         }
+        #mute-toggle:hover { opacity: 1; }
     </style>
 </head>
 <body>
 
-    <div id="bg-layer"></div>
+    <div class="background-container" id="bg">
+        <div class="flare flare-purple"></div>
+        <div class="flare flare-orange"></div>
+    </div>
+
     <div id="shimmer"></div>
 
     <button id="mute-toggle">🔊</button>
@@ -160,9 +161,8 @@
 
     <div class="wrapper">
         <div class="glass-card" id="card">
-            <!-- Ensure your image is named chronia5.jpg in the same folder -->
+            <!-- Ensure your image is named chronia5.jpg in your GitHub folder -->
             <img src="chronia5.jpg" alt="Chronia" class="avatar">
-            
             <p class="subtext">yeah</p>
 
             <div class="social-dock">
@@ -179,7 +179,7 @@
                     𝕏
                 </a>
                 <a href="https://www.roblox.com/users/502463017/profile" class="social-btn">
-                    <!-- Correct Roblox Tilt Logo -->
+                    <!-- Correct Tilted Square Logo -->
                     <svg viewBox="0 0 24 24"><path d="M5.345 5.03L18.97 1.48L22.655 15.65L9.03 19.2L5.345 5.03Z"/></svg>
                     Roblox
                 </a>
@@ -189,29 +189,29 @@
         </div>
     </div>
 
-    <!-- AUDIO FILE LINK - Swap 'song.mp3' with your actual file -->
+    <!-- Replace 'song.mp3' with your actual file name -->
     <audio id="bg-music" loop src="song.mp3"></audio>
 
     <script>
         const card = document.getElementById('card');
-        const bg = document.getElementById('bg-layer');
+        const bg = document.getElementById('bg');
         const shimmer = document.getElementById('shimmer');
         const music = document.getElementById('bg-music');
         const muteBtn = document.getElementById('mute-toggle');
 
-        // PARALLAX & SHIMMER LOGIC
+        // SUBTLE PARALLAX (Tuned down to /120 and /150 for tiny movement)
         document.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.pageX) / 25;
-            const y = (window.innerHeight / 2 - e.pageY) / 25;
+            const x = (window.innerWidth / 2 - e.pageX) / 120;
+            const y = (window.innerHeight / 2 - e.pageY) / 150;
             
             card.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
-            bg.style.transform = `translate(${x*0.5}px, ${y*0.5}px)`;
+            bg.style.transform = `translate(${x*0.2}px, ${y*0.2}px)`;
             
             shimmer.style.setProperty('--x', e.clientX + 'px');
             shimmer.style.setProperty('--y', e.clientY + 'px');
         });
 
-        // AUDIO VISUALIZER LOGIC
+        // VISUALIZER
         let context, analyser, src, array;
         const canvas = document.getElementById("visualizer");
         const ctx = canvas.getContext("2d");
@@ -231,14 +231,13 @@
             window.requestAnimationFrame(loop);
             analyser.getByteFrequencyData(array);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#9d4edd"; // Purple Visualizer
+            ctx.fillStyle = "rgba(157, 78, 221, 0.5)"; 
             for (let i = 0; i < array.length; i++) {
-                const barHeight = array[i] / 4;
-                ctx.fillRect(i * 12, canvas.height - barHeight, 8, barHeight);
+                const barHeight = array[i] / 5;
+                ctx.fillRect(i * 14, canvas.height - barHeight, 10, barHeight);
             }
         }
 
-        // START MUSIC ON CLICK (Browser Requirement)
         window.addEventListener('click', () => {
             if (!context) initVisualizer();
             music.play();
