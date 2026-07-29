@@ -5,197 +5,253 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chronia</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@1,6..96,400&family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=VT323&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-dark: #0a0a0a;
-            --accent-purple: #a855f7;
-            --accent-orange: #f97316;
-            --glass: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.15);
+            --bg-dark: #070707;
+            --accent-purple: #9d4edd;
+            --accent-orange: #ff9100;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            cursor: url('https://cur.cursors-4u.net/games/gam-4/gam373.cur'), auto; /* Pixel Cursor */
+            cursor: crosshair;
         }
 
-        body {
+        body, html {
+            height: 100%;
             background-color: var(--bg-dark);
-            /* Background: Grainy Noir with Purple/Orange highlights */
-            background-image: 
-                radial-gradient(circle at 10% 10%, rgba(168, 85, 247, 0.15), transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(249, 115, 22, 0.1), transparent 40%),
-                url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); /* Noise texture */
             color: white;
             font-family: 'VT323', monospace;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow: hidden;
         }
 
-        /* Silent Artistic Header */
+        /* Parallax Background Layer */
+        #bg-layer {
+            position: fixed;
+            top: -10%; left: -10%;
+            width: 120%; height: 120%;
+            /* Replace with your NY Noir Image Link */
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), 
+                        url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); 
+            background-size: cover;
+            z-index: -1;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Mouse Shimmer Effect */
+        #shimmer {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+                        rgba(157, 78, 221, 0.15) 0%, 
+                        rgba(255, 145, 0, 0.05) 25%, 
+                        transparent 50%);
+            z-index: 0;
+        }
+
+        /* The Silent Header */
         .silent-header {
             position: absolute;
-            top: 10%;
+            top: 15%;
+            width: 100%;
+            text-align: center;
+            font-family: 'Pinyon Script', cursive;
+            font-size: clamp(3rem, 12vw, 9rem);
+            color: rgba(255, 255, 255, 0.08);
+            text-shadow: 0 0 20px rgba(157, 78, 221, 0.2);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Audio Visualizer Canvas */
+        #visualizer {
+            position: absolute;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Bodoni Moda', serif;
-            font-style: italic;
-            font-size: clamp(4rem, 10vw, 8rem);
-            color: rgba(255, 255, 255, 0.07); /* Semi-transparent */
-            z-index: 0;
-            pointer-events: none;
-            text-transform: lowercase;
-            letter-spacing: -2px;
-        }
-
-        /* Windows 11 Glass Card */
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
-            border-radius: 28px; /* Win 11 Rounded */
-            padding: 40px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            z-index: 1;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        /* Avatar with Y2K White Border */
-        .avatar {
-            width: 140px;
-            height: 140px;
-            border-radius: 20px;
-            border: 3px solid white;
-            object-fit: cover;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
-        }
-
-        .subtext {
-            font-size: 1.2rem;
-            color: #ccc;
-            margin-bottom: 30px;
-            opacity: 0.8;
-        }
-
-        /* Social Buttons */
-        .social-dock {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .social-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            text-decoration: none;
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .social-btn:hover {
-            background: rgba(168, 85, 247, 0.2);
-            border-color: var(--accent-purple);
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
-        }
-
-        .social-btn svg {
-            width: 20px;
-            height: 20px;
-            margin-right: 8px;
-            fill: white;
-        }
-
-        /* Bottom Scrolling Marquee (Y2K style) */
-        .marquee {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background: rgba(168, 85, 247, 0.05);
-            padding: 5px 0;
-            border-top: 1px solid var(--border);
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .marquee-content {
-            display: inline-block;
-            animation: scroll 20s linear infinite;
-            font-size: 0.9rem;
-            color: var(--accent-purple);
+            width: 200px;
+            height: 40px;
             opacity: 0.6;
         }
 
-        @keyframes scroll {
-            from { transform: translateX(100%); }
-            to { transform: translateX(-100%); }
+        /* Main Glass Card */
+        .glass-card {
+            position: relative;
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            border-radius: 35px;
+            padding: 50px;
+            width: 90%;
+            max-width: 440px;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(157, 78, 221, 0.1);
+            transition: transform 0.1s ease-out;
         }
 
-        /* Mobile Adjustments */
-        @media (max-width: 480px) {
-            .glass-card { padding: 25px; }
-            .silent-header { font-size: 4rem; top: 15%; }
+        /* Avatar with White Glow */
+        .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 25px;
+            border: 2px solid rgba(255,255,255,0.8);
+            object-fit: cover;
+            margin-bottom: 25px;
+            box-shadow: 0 0 35px 5px rgba(255, 255, 255, 0.6), 
+                        0 0 60px rgba(157, 78, 221, 0.4);
+        }
+
+        .subtext { font-size: 1.3rem; color: #aaa; margin-bottom: 35px; }
+
+        /* Social Icons Grid */
+        .social-dock { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        
+        .social-btn {
+            display: flex; align-items: center; justify-content: center;
+            padding: 12px; background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border); border-radius: 15px;
+            text-decoration: none; color: white; transition: 0.3s;
+        }
+
+        .social-btn:hover {
+            border-color: var(--accent-purple);
+            background: rgba(157, 78, 221, 0.1);
+            box-shadow: 0 0 15px rgba(157, 78, 221, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .social-btn svg { width: 18px; height: 18px; margin-right: 10px; fill: white; }
+
+        /* Audio Mute Button */
+        #mute-toggle {
+            position: fixed;
+            top: 20px; right: 20px;
+            background: none; border: none;
+            color: white; font-size: 24px;
+            opacity: 0.5; transition: 0.3s;
+            z-index: 100;
+        }
+        #mute-toggle:hover { opacity: 1; transform: scale(1.1); }
+
+        /* Page Centering */
+        .wrapper {
+            height: 100vh; display: flex;
+            justify-content: center; align-items: center;
         }
     </style>
 </head>
 <body>
 
-    <h1 class="silent-header">chronia 🧡</h1>
+    <div id="bg-layer"></div>
+    <div id="shimmer"></div>
 
-    <div class="glass-card">
-        <!-- REPLACE 'avatar.png' with your actual image file name -->
-        <img src="chronia5.jpg" alt="Chronia" class="avatar">
-        
-        <p class="subtext">A stupid bitch..</p>
+    <button id="mute-toggle">🔊</button>
+    <h1 class="silent-header">chronia 🤍</h1>
 
-        <div class="social-dock">
-            <a href="https://discord.com/users/987815885702041610" class="social-btn">
-                <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037 19.736 19.736 0 0 0-4.885 1.515.069.069 0 0 0-.032.027C.533 9.048-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
-                Discord
-            </a>
-            <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde" class="social-btn">
-                <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.508 17.308c-.216.354-.675.467-1.028.249-2.833-1.73-6.398-2.122-10.601-1.158-.403.092-.809-.16-.901-.563-.092-.403.16-.809.563-.901 4.594-1.05 8.528-.604 11.718 1.344.353.218.465.676.249 1.03zm1.472-3.262c-.272.441-.849.582-1.289.31-3.242-1.991-8.185-2.57-11.285-1.63-.498.151-1.025-.133-1.176-.632-.151-.498.133-1.025.632-1.176 3.652-1.107 9.1-0.45 12.819 1.83.441.272.582.849.31 1.289zm.129-3.41c-3.888-2.31-10.306-2.522-14.032-1.391-.595.18-1.222-.162-1.403-.757-.181-.595.163-1.222.757-1.403 4.286-1.301 11.373-1.045 15.823 1.597.534.317.708 1.004.391 1.538-.316.534-1.003.708-1.536.39z"/></svg>
-                Spotify
-            </a>
-            <a href="https://x.com/Chronia69" class="social-btn">
-                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                Twitter
-            </a>
-            <a href="https://www.roblox.com/users/502463017/profile" class="social-btn">
-                <svg viewBox="0 0 24 24"><path d="M18.326 15.68L12.564 17.65L10.594 11.888L16.356 9.918L18.326 15.68ZM5.674 8.32L11.436 6.35L13.406 12.112L7.644 14.082L5.674 8.32ZM24 12C24 5.373 18.627 0 12 0C5.373 0 0 5.373 0 12C0 18.627 5.373 24 12 24C18.627 24 24 18.627 24 12Z"/></svg>
-                Roblox
-            </a>
+    <div class="wrapper">
+        <div class="glass-card" id="card">
+            <!-- Ensure your image is named chronia5.jpg in the same folder -->
+            <img src="chronia5.jpg" alt="Chronia" class="avatar">
+            
+            <p class="subtext">yeah</p>
+
+            <div class="social-dock">
+                <a href="https://discord.com/users/987815885702041610" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037 19.736 19.736 0 0 0-4.885 1.515.069.069 0 0 0-.032.027C.533 9.048-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/></svg>
+                    Discord
+                </a>
+                <a href="https://open.spotify.com/user/31mlgjgb7lw4vjyfwpmm6z2sgqde" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.508 17.308c-.216.354-.675.467-1.028.249-2.833-1.73-6.398-2.122-10.601-1.158-.403.092-.809-.16-.901-.563-.092-.403.16-.809.563-.901 4.594-1.05 8.528-.604 11.718 1.344.353.218.465.676.249 1.03zm1.472-3.262c-.272.441-.849.582-1.289.31-3.242-1.991-8.185-2.57-11.285-1.63-.498.151-1.025-.133-1.176-.632-.151-.498.133-1.025.632-1.176 3.652-1.107 9.1-0.45 12.819 1.83.441.272.582.849.31 1.289zm.129-3.41c-3.888-2.31-10.306-2.522-14.032-1.391-.595.18-1.222-.162-1.403-.757-.181-.595.163-1.222.757-1.403 4.286-1.301 11.373-1.045 15.823 1.597.534.317.708 1.004.391 1.538-.316.534-1.003.708-1.536.39z"/></svg>
+                    Spotify
+                </a>
+                <a href="https://x.com/Chronia69" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    𝕏
+                </a>
+                <a href="https://www.roblox.com/users/502463017/profile" class="social-btn">
+                    <!-- Correct Roblox Tilt Logo -->
+                    <svg viewBox="0 0 24 24"><path d="M5.345 5.03L18.97 1.48L22.655 15.65L9.03 19.2L5.345 5.03Z"/></svg>
+                    Roblox
+                </a>
+            </div>
+            
+            <canvas id="visualizer"></canvas>
         </div>
     </div>
 
-    <div class="marquee">
-        <div class="marquee-content">
-            kill me kill me kill me kill me kill me kill me kill me kill me kill me kill me kill me kill me kill me kill me
-        </div>
-    </div>
+    <!-- AUDIO FILE LINK - Swap 'song.mp3' with your actual file -->
+    <audio id="bg-music" loop src="song.mp3"></audio>
+
+    <script>
+        const card = document.getElementById('card');
+        const bg = document.getElementById('bg-layer');
+        const shimmer = document.getElementById('shimmer');
+        const music = document.getElementById('bg-music');
+        const muteBtn = document.getElementById('mute-toggle');
+
+        // PARALLAX & SHIMMER LOGIC
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 25;
+            const y = (window.innerHeight / 2 - e.pageY) / 25;
+            
+            card.style.transform = `rotateY(${x}deg) rotateX(${-y}deg)`;
+            bg.style.transform = `translate(${x*0.5}px, ${y*0.5}px)`;
+            
+            shimmer.style.setProperty('--x', e.clientX + 'px');
+            shimmer.style.setProperty('--y', e.clientY + 'px');
+        });
+
+        // AUDIO VISUALIZER LOGIC
+        let context, analyser, src, array;
+        const canvas = document.getElementById("visualizer");
+        const ctx = canvas.getContext("2d");
+
+        function initVisualizer() {
+            context = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = context.createAnalyser();
+            src = context.createMediaElementSource(music);
+            src.connect(analyser);
+            analyser.connect(context.destination);
+            analyser.fftSize = 64;
+            array = new Uint8Array(analyser.frequencyBinCount);
+            loop();
+        }
+
+        function loop() {
+            window.requestAnimationFrame(loop);
+            analyser.getByteFrequencyData(array);
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#9d4edd"; // Purple Visualizer
+            for (let i = 0; i < array.length; i++) {
+                const barHeight = array[i] / 4;
+                ctx.fillRect(i * 12, canvas.height - barHeight, 8, barHeight);
+            }
+        }
+
+        // START MUSIC ON CLICK (Browser Requirement)
+        window.addEventListener('click', () => {
+            if (!context) initVisualizer();
+            music.play();
+        }, { once: true });
+
+        muteBtn.addEventListener('click', () => {
+            if (music.muted) {
+                music.muted = false; muteBtn.innerText = '🔊';
+            } else {
+                music.muted = true; muteBtn.innerText = '🔇';
+            }
+        });
+    </script>
 
 </body>
 </html>
