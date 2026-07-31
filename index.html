@@ -20,300 +20,90 @@
   *{ box-sizing:border-box; margin:0; padding:0; }
 
   html,body{
-    height:100%;
-    width:100%;
-    overflow-x:hidden;
-    background:var(--black);
-    font-family:'Inter', sans-serif;
+    height:100%; width:100%; overflow:hidden;
+    background:var(--black); font-family:'Inter', sans-serif;
     cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="9" stroke="white" stroke-width="1.5"/><line x1="12" y1="15" x2="12" y2="22" stroke="white" stroke-width="1.5"/><line x1="2" y1="12" x2="9" y2="12" stroke="white" stroke-width="1.5"/><line x1="15" y1="12" x2="22" y2="12" stroke="white" stroke-width="1.5"/><circle cx="12" cy="12" r="1.6" fill="white"/></svg>') 12 12, crosshair;
   }
 
   a, button{ cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><rect x="8" y="8" width="4" height="4" fill="white"/></svg>') 10 10, pointer; }
 
-  /* ================= BACKGROUND SYSTEM ================= */
-  .bg-gradient{
-    position:fixed; inset:0; z-index:0;
-    background: linear-gradient(
-      90deg,
-      var(--purple) 0%,
-      var(--black) 45%,
-      var(--black) 55%,
-      rgba(255,255,255,0.05) 100%
-    );
-  }
-
-  .bg-dots{
-    position:fixed; inset:0; z-index:1;
-    background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1.4px);
-    background-size: 30px 30px;
-    pointer-events:none;
-  }
-
-  .bg-scanlines{
-    position:fixed; inset:0; z-index:2;
-    background: repeating-linear-gradient(
-      to bottom,
-      rgba(0,0,0,0.15) 0px,
-      rgba(0,0,0,0.15) 1px,
-      transparent 1px,
-      transparent 3px
-    );
-    mix-blend-mode: overlay;
-    pointer-events:none;
-  }
-
-  .flare{
-    position:fixed; z-index:1;
-    width:46vw; height:46vw;
-    border-radius:50%;
-    filter: blur(140px);
-    opacity:0.22;
-    pointer-events:none;
-  }
+  /* ================= BACKGROUND ================= */
+  .bg-gradient{ position:fixed; inset:0; z-index:0; background: linear-gradient(90deg, var(--purple) 0%, var(--black) 45%, var(--black) 55%, rgba(255,255,255,0.05) 100%); }
+  .bg-dots{ position:fixed; inset:0; z-index:1; background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1.4px); background-size: 30px 30px; pointer-events:none; }
+  .bg-scanlines{ position:fixed; inset:0; z-index:2; background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.15) 0px, rgba(0,0,0,0.15) 1px, transparent 1px, transparent 3px); mix-blend-mode: overlay; pointer-events:none; }
+  .flare{ position:fixed; z-index:1; width:46vw; height:46vw; border-radius:50%; filter: blur(140px); opacity:0.22; pointer-events:none; }
   .flare.purple{ top:-10%; left:-12%; background:var(--purple); }
   .flare.white{ bottom:-14%; right:-12%; background:var(--white-accent); }
 
   /* ================= PARTICLES ================= */
-  .particle-layer{
-    position:fixed; inset:0; z-index:4;
-    pointer-events:none; overflow:hidden;
-  }
-  .particle{
-    position:absolute;
-    width:3px; height:3px;
-    background:#fff;
-    border-radius:50%;
-    opacity:0;
-    box-shadow:0 0 6px 1px rgba(255,255,255,0.5);
-  }
+  .particle-layer{ position:fixed; inset:0; z-index:4; pointer-events:none; overflow:hidden; }
+  .particle{ position:absolute; width:3px; height:3px; background:#fff; border-radius:50%; opacity:0; box-shadow:0 0 6px 1px rgba(255,255,255,0.5); }
 
   /* ================= WATERMARK ================= */
-  .watermark{
-    position:fixed;
-    inset:0;
-    z-index:5;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    pointer-events:none;
-  }
-  .watermark h1{
-    font-family:'Pinyon Script', cursive;
-    font-weight:400;
-    font-size: clamp(90px, 16vw, 220px);
-    color: rgba(255,255,255,0.08);
-    line-height:1;
-    display:flex;
-    align-items:center;
-    gap:0.25em;
-  }
-  .watermark .heart{
-    font-size:0.34em;
-    filter: drop-shadow(0 0 12px rgba(255,255,255,0.3));
-    -webkit-text-fill-color: rgba(255,255,255,0.5);
-  }
-  .watermark .sub{
-    margin-top:6px;
-    font-family:'VT323', monospace;
-    letter-spacing:0.5em;
-    text-transform:lowercase;
-    font-size:18px;
-    color: rgba(255,255,255,0.35);
-  }
+  .watermark{ position:fixed; inset:0; z-index:5; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; pointer-events:none; }
+  .watermark h1{ font-family:'Pinyon Script', cursive; font-weight:400; font-size: clamp(90px, 16vw, 220px); color: rgba(255,255,255,0.08); line-height:1; }
 
-  /* ================= HERO CARD (LIQUID GLASS) ================= */
-  .stage{
-    position:relative;
-    z-index:6;
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:40px 20px;
-    perspective: 1200px;
-  }
-
+  /* ================= CARD ================= */
+  .stage{ position:relative; z-index:6; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:40px 20px; perspective: 1200px; }
   .card{
-    position:relative;
-    width:100%;
-    max-width:380px;
-    background:
-      linear-gradient(155deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.01) 28%, rgba(255,255,255,0.04) 100%),
-      var(--glass-bg);
-    backdrop-filter: blur(40px) saturate(160%);
-    -webkit-backdrop-filter: blur(40px) saturate(160%);
-    border: 1px solid var(--glass-border);
-    border-radius:44px;
-    padding:42px 30px 30px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    box-shadow:
-      0 24px 70px rgba(0,0,0,0.5),
-      0 0 0 1px rgba(255,255,255,0.02) inset,
-      0 1px 0 rgba(255,255,255,0.25) inset,
-      0 40px 50px -30px var(--glow);
+    position:relative; width:100%; max-width:380px;
+    background: linear-gradient(155deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.01) 28%, rgba(255,255,255,0.04) 100%), var(--glass-bg);
+    backdrop-filter: blur(40px) saturate(160%); -webkit-backdrop-filter: blur(40px) saturate(160%);
+    border: 1px solid var(--glass-border); border-radius:44px; padding:42px 30px 30px;
+    display:flex; flex-direction:column; align-items:center;
+    box-shadow: 0 24px 70px rgba(0,0,0,0.5), 0 40px 50px -30px var(--glow);
     transform-style: preserve-3d;
-    transition: box-shadow .35s ease;
-    overflow:hidden;
+    will-change: transform;
   }
 
-  .card::before{
-    content:"";
-    position:absolute;
-    top: -20%; left: -20%;
-    width: 140%; height: 140%;
-    background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 40%);
-    pointer-events:none;
-    z-index:0;
-  }
+  .avatar-wrap{ position:relative; width:132px; height:132px; margin-bottom:24px; }
+  .avatar{ width:100%; height:100%; object-fit:cover; border-radius:28px; border:1.5px solid rgba(255,255,255,0.9); background: linear-gradient(135deg, var(--purple), #fff); }
 
-  .avatar-wrap{
-    position:relative;
-    width:132px; height:132px;
-    margin-bottom:24px;
-  }
-  .avatar-aura{
-    position:absolute; inset:-16px;
-    border-radius:34px;
-    background: radial-gradient(circle, var(--purple), rgba(255,255,255,0) 70%);
-    filter: blur(16px);
-    animation: aura-pulse 3.6s ease-in-out infinite;
-    opacity: 0.35;
-  }
-  @keyframes aura-pulse{
-    0%,100%{ opacity:0.3; transform:scale(1); }
-    50%{ opacity:0.5; transform:scale(1.08); }
-  }
-  .avatar{
-    position:relative;
-    z-index:1;
-    width:100%; height:100%;
-    object-fit:cover;
-    border-radius:28px;
-    border:1.5px solid rgba(255,255,255,0.9);
-    display:block;
-    background: linear-gradient(135deg, var(--purple), #fff);
-  }
+  .name-row { display: flex; align-items: center; gap: 10px; }
+  .name{ font-family:'VT323', monospace; font-size:28px; letter-spacing:3px; color:#fff; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+  
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #747f8d; transition: 0.4s ease; }
+  .online { background: #43b581; box-shadow: 0 0 12px #43b581; }
+  .idle   { background: #faa61a; box-shadow: 0 0 12px #faa61a; }
+  .dnd    { background: #f04747; box-shadow: 0 0 12px #f04747; }
 
-  /* Discord Status & Name */
-  .name-container {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .name{
-    font-family:'VT323', monospace;
-    font-size:28px;
-    letter-spacing:3px;
-    color:#fff;
-    text-shadow: 0 0 10px rgba(255,255,255,0.2);
-  }
-  .status-dot {
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: #747f8d;
-    transition: all 0.4s ease;
-  }
-  .status-online { background: #43b581; box-shadow: 0 0 12px #43b581; }
-  .status-idle   { background: #faa61a; box-shadow: 0 0 12px #faa61a; }
-  .status-dnd    { background: #f04747; box-shadow: 0 0 12px #f04747; }
+  .tagline{ margin-top:4px; font-family:'VT323', monospace; font-size:15px; letter-spacing:2px; color: rgba(255,255,255,0.4); }
 
-  .tagline{
-    margin-top:4px;
-    font-family:'VT323', monospace;
-    font-size:15px;
-    letter-spacing:2px;
-    color: rgba(255,255,255,0.4);
-  }
-
-  .dock{
-    margin-top:28px;
-    width:100%;
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap:12px;
-  }
+  .dock{ margin-top:28px; width:100%; display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
   .pill{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:8px;
-    padding:12px 10px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.05);
-    color:#fff;
-    text-decoration:none;
-    font-family:'Inter', sans-serif;
-    font-size:13px;
-    font-weight:500;
-    transition: all .3s ease;
+    display:flex; align-items:center; justify-content:center; padding:12px; border-radius:18px;
+    border:1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.05);
+    color:#fff; text-decoration:none; font-family:'Inter', sans-serif; font-size:13px; font-weight:500; transition: all .3s ease;
   }
-  .pill:hover{
-    transform: translateY(-3px);
-    border-color: var(--purple);
-    background: rgba(157, 123, 192, 0.15);
-    box-shadow: 0 8px 24px rgba(157, 123, 192, 0.2);
-  }
+  .pill:hover{ transform: translateY(-3px); border-color: var(--purple); background: rgba(157, 123, 192, 0.15); box-shadow: 0 8px 24px rgba(157, 123, 192, 0.2); }
 
-  .visualizer-wrap{
+  /* ================= SPOTIFY SECTION ================= */
+  .spotify-box {
     position: relative;
-    margin-top:28px;
-    width:100%;
-    height:56px;
-    border-radius:20px;
-    border:1px solid rgba(255,255,255,0.08);
-    background: rgba(0,0,0,0.3);
-    overflow:hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-top: 28px; width: 100%; height: 74px;
+    background: rgba(0,0,0,0.3); border-radius: 22px;
+    border: 1px solid rgba(255,255,255,0.08);
+    display: flex; align-items: center; padding: 0 14px; gap: 12px;
+    overflow: hidden;
   }
-  #viz{ width:100%; height:100%; display:block; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+  #spotify-album { width: 44px; height: 44px; border-radius: 10px; object-fit: cover; box-shadow: 0 4px 10px rgba(0,0,0,0.4); transition: opacity 0.3s ease; }
+  .spotify-info { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+  #spotify-track { color: #fff; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #spotify-artist { color: rgba(255,255,255,0.4); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
 
-  /* Spotify Text Styles */
-  .spotify-text {
+  /* Hover Tooltip */
+  .spotify-box:hover::after {
+    content: attr(data-tooltip);
     position: absolute;
-    z-index: 10;
-    font-family: 'VT323', monospace;
-    color: rgba(255,255,255,0.7);
-    font-size: 14px;
-    pointer-events: none;
-    letter-spacing: 1px;
-    text-transform: lowercase;
-    text-align: center;
-    width: 90%;
+    bottom: 115%; left: 50%; transform: translateX(-50%);
+    background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(10px);
+    color: #fff; padding: 10px 14px; border-radius: 16px; font-size: 12px;
+    border: 1px solid rgba(255,255,255,0.1); width: max-content; max-width: 240px;
+    z-index: 100; text-align: center; white-space: pre-wrap;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5); pointer-events: none;
   }
+  .spotify-box[data-tooltip=""]:hover::after { display: none; }
 
-  .sound-toggle{
-    position:fixed;
-    top:24px; right:24px;
-    z-index:20;
-    width:40px; height:40px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,0.15);
-    background: rgba(255,255,255,0.06);
-    backdrop-filter: blur(12px);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transition: all .3s ease;
-    padding: 0;
-  }
-  .sound-toggle svg{ width:18px; height:18px; display:block; margin:auto; }
-  .sound-toggle:hover{
-    border-color: var(--purple);
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  @media (max-width: 420px){
-    .watermark h1{ font-size: 22vw; }
-  }
 </style>
 </head>
 <body>
@@ -326,29 +116,16 @@
   <div class="particle-layer" id="particleLayer"></div>
 
   <div class="watermark">
-    <h1>chronia<span class="heart"></span></h1>
-    <div class="sub">yeah</div>
+    <h1>chronia</h1>
   </div>
-
-  <button class="sound-toggle" id="soundToggle" aria-label="Toggle sound">
-    <svg id="iconOn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/>
-      <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-    </svg>
-    <svg id="iconOff" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor" stroke="none"/>
-      <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
-    </svg>
-  </button>
 
   <div class="stage">
     <div class="card" id="card">
       <div class="avatar-wrap">
-        <div class="avatar-aura"></div>
         <img class="avatar" src="chronia6.png" alt="chronia">
       </div>
 
-      <div class="name-container">
+      <div class="name-row">
         <div class="name">chronia</div>
         <div id="status-dot" class="status-dot"></div>
       </div>
@@ -361,37 +138,42 @@
         <a class="pill" href="https://www.roblox.com/users/502463017" target="_blank">Roblox</a>
       </div>
 
-      <div class="visualizer-wrap">
-        <div id="spotify-info" class="spotify-text"></div>
-        <canvas id="viz"></canvas>
+      <div class="spotify-box" id="spotify-box" data-tooltip="">
+        <img id="spotify-album" src="https://i.imgur.com/8N97X76.png" alt="album">
+        <div class="spotify-info">
+          <div id="spotify-track">Not listening to anything</div>
+          <div id="spotify-artist">Spotify</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <audio id="bgAudio" loop preload="auto"></audio>
-
   <script>
-    // ============= LANYARD INTEGRATION =============
     const DISCORD_ID = "987815885702041610";
-    const statusDot = document.getElementById('status-dot');
-    const spotifyInfo = document.getElementById('spotify-info');
 
+    // ============= LANYARD WS =============
     function updateLanyard(data) {
       const { discord_status, listening_to_spotify, spotify } = data;
+      const dot = document.getElementById('status-dot');
+      dot.className = 'status-dot ' + (discord_status || 'offline');
 
-      // Update Dot Status
-      statusDot.className = 'status-dot';
-      if (discord_status === 'online') statusDot.classList.add('status-online');
-      else if (discord_status === 'idle') statusDot.classList.add('status-idle');
-      else if (discord_status === 'dnd') statusDot.classList.add('status-dnd');
+      const track = document.getElementById('spotify-track');
+      const artist = document.getElementById('spotify-artist');
+      const album = document.getElementById('spotify-album');
+      const box = document.getElementById('spotify-box');
 
-      // Update Spotify Status
       if (listening_to_spotify && spotify) {
-        const artist = spotify.artist.split(';')[0];
-        const song = spotify.track.length > 25 ? spotify.track.substring(0, 22) + '...' : spotify.track;
-        spotifyInfo.innerText = `listening to: ${song} - ${artist}`;
+        track.innerText = spotify.track;
+        artist.innerText = `by ${spotify.artist}`;
+        album.src = spotify.album_art_url;
+        album.style.opacity = "1";
+        box.setAttribute('data-tooltip', `${spotify.track}\nby ${spotify.artist}`);
       } else {
-        spotifyInfo.innerText = "not listening to anything";
+        track.innerText = "Not listening to anything";
+        artist.innerText = "Spotify";
+        album.src = "https://i.imgur.com/8N97X76.png"; 
+        album.style.opacity = "0.2";
+        box.setAttribute('data-tooltip', "");
       }
     }
 
@@ -409,44 +191,7 @@
     }
     initLanyard();
 
-    // ============= PARTICLES =============
-    const particleLayer = document.getElementById('particleLayer');
-    const NUM_PARTICLES = 44;
-    const particles = [];
-
-    function makeParticle(isInitial = false){
-      const el = document.createElement('div');
-      el.className = 'particle';
-      particleLayer.appendChild(el);
-      return {
-        el,
-        x: Math.random()*100,
-        y: isInitial ? Math.random()*110 : 115, 
-        speed: 0.02 + Math.random()*0.045,
-        drift: (Math.random()-0.5)*0.02,
-        size: 2 + Math.random()*3
-      };
-    }
-
-    for(let i=0;i<NUM_PARTICLES;i++) particles.push(makeParticle(true));
-
-    function animateParticles(){
-      particles.forEach(p=>{
-        p.y -= p.speed;
-        p.x += p.drift;
-        if(p.y < -10){ p.y = 115; p.x = Math.random()*100; }
-        let opacity = p.y > 100 ? 1 - (p.y - 100)/15 : (p.y < 12 ? p.y/12 : 1);
-        p.el.style.left = p.x + 'vw';
-        p.el.style.top = p.y + 'vh';
-        p.el.style.width = p.size + 'px';
-        p.el.style.height = p.size + 'px';
-        p.el.style.opacity = Math.max(0, Math.min(1, opacity)) * 0.5;
-      });
-      requestAnimationFrame(animateParticles);
-    }
-    animateParticles();
-
-    // ============= PARALLAX TILT =============
+    // ============= ORIGINAL PARALLAX TILT =============
     const card = document.getElementById('card');
     let hoveringCard = false;
     let targetRotX = 0, targetRotY = 0, targetScale = 1;
@@ -458,10 +203,12 @@
     window.addEventListener('mousemove', (e)=>{
       const rect = card.getBoundingClientRect();
       if(hoveringCard){
+        // Tilt more when hovering directly
         const relX = (e.clientX - rect.left)/rect.width - 0.5;
         const relY = (e.clientY - rect.top)/rect.height - 0.5;
         targetRotY = relX * 18; targetRotX = -relY * 18; targetScale = 1.015;
       } else {
+        // Subtle tilt when mouse is anywhere else
         const cx = rect.left + rect.width/2; const cy = rect.top + rect.height/2;
         const relX = (e.clientX - cx)/window.innerWidth;
         const relY = (e.clientY - cy)/window.innerHeight;
@@ -470,6 +217,7 @@
     });
 
     function tickTilt(){
+      // Smooth interpolation (lerp)
       curRotX += (targetRotX - curRotX) * 0.08;
       curRotY += (targetRotY - curRotY) * 0.08;
       curScale += (targetScale - curScale) * 0.08;
@@ -478,86 +226,28 @@
     }
     tickTilt();
 
-    // ============= VISUALIZER =============
-    const audio = document.getElementById('bgAudio');
-    audio.src = "song.mp3"; 
-    const canvas = document.getElementById('viz');
-    const ctx = canvas.getContext('2d');
-    let audioCtx, analyser, source, dataArray;
-    let started = false;
-
-    const SAMPLE_POINTS = 20; 
-    let smoothed = new Array(SAMPLE_POINTS).fill(0);
-
-    function initAudio(){
-      if(audioCtx) return;
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      source = audioCtx.createMediaElementSource(audio);
-      analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 256; 
-      analyser.smoothingTimeConstant = 0.82; 
-      dataArray = new Uint8Array(analyser.frequencyBinCount);
-      source.connect(analyser); analyser.connect(audioCtx.destination);
+    // ============= PARTICLES =============
+    const particleLayer = document.getElementById('particleLayer');
+    const particles = [];
+    for(let i=0; i<40; i++) {
+      const el = document.createElement('div');
+      el.className = 'particle';
+      particleLayer.appendChild(el);
+      particles.push({
+        el, x: Math.random()*100, y: Math.random()*100,
+        s: 0.02 + Math.random()*0.04, d: (Math.random()-0.5)*0.02
+      });
     }
-
-    function drawViz(){
-      requestAnimationFrame(drawViz);
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      if(!analyser) return;
-
-      analyser.getByteFrequencyData(dataArray);
-      const w = canvas.width, h = canvas.height;
-      const barWidth = (w / (SAMPLE_POINTS * 2)) * 0.7;
-      const gap = (w / (SAMPLE_POINTS * 2)) * 0.3;
-
-      ctx.fillStyle = '#fff';
-      for(let i=0; i<SAMPLE_POINTS; i++){
-        let target = (dataArray[i] / 255) * h * 0.75;
-        smoothed[i] += (target - smoothed[i]) * 0.2;
-        let bh = Math.max(6, smoothed[i]);
-        ctx.beginPath();
-        ctx.roundRect(w/2 + i*(barWidth+gap), h/2 - bh/2, barWidth, bh, 20);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.roundRect(w/2 - barWidth - i*(barWidth+gap), h/2 - bh/2, barWidth, bh, 20);
-        ctx.fill();
-      }
+    function animateParticles() {
+      particles.forEach(p => {
+        p.y -= p.s; p.x += p.d;
+        if(p.y < -5) p.y = 105;
+        p.el.style.left = p.x + 'vw'; p.el.style.top = p.y + 'vh';
+        p.el.style.opacity = p.y < 20 ? p.y/20 : (p.y > 80 ? (100-p.y)/20 : 0.4);
+      });
+      requestAnimationFrame(animateParticles);
     }
-
-    function resizeCanvas(){
-      canvas.width = canvas.clientWidth * 2;
-      canvas.height = canvas.clientHeight * 2;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-    drawViz();
-
-    // ============= SOUND TOGGLE =============
-    function attemptPlay(){
-      if(started) return;
-      initAudio();
-      audio.play().then(() => {
-        started = true;
-        document.getElementById('iconOn').style.display = 'block';
-        document.getElementById('iconOff').style.display = 'none';
-      }).catch(() => {});
-    }
-
-    document.body.addEventListener('click', () => { if(!started) attemptPlay(); }, { once: false });
-
-    document.getElementById('soundToggle').addEventListener('click', (e)=>{
-      e.stopPropagation();
-      if(!started) { attemptPlay(); return; }
-      if(audio.paused){
-        audio.play();
-        document.getElementById('iconOn').style.display = 'block';
-        document.getElementById('iconOff').style.display = 'none';
-      } else {
-        audio.pause();
-        document.getElementById('iconOn').style.display = 'none';
-        document.getElementById('iconOff').style.display = 'block';
-      }
-    });
+    animateParticles();
   </script>
 </body>
 </html>
