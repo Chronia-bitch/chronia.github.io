@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>chronia | profile</title>
+    <title>Chronia | profile</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&family=Pinyon+Script&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -15,81 +15,77 @@
         body {
             background: #020202; color: white; font-family: 'Inter', sans-serif;
             margin: 0; padding: 20px 40px; min-height: 100vh; overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
         }
 
         .bg { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
         .gradient { position: absolute; inset: 0; background: linear-gradient(90deg, var(--purple) 0%, #020202 50%); opacity: 0.15; }
         .scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.1) 0px, transparent 2px); }
 
-        .back-nav { margin-bottom: 10px; }
+        .main-wrapper {
+            max-width: 1300px; width: 100%;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+
+        .back-nav { margin-bottom: 5px; }
         .btn-back { color: rgba(255,255,255,0.4); text-decoration: none; font-family: 'VT323'; font-size: 18px; transition: 0.3s; }
         .btn-back:hover { color: var(--purple); }
 
-        /* Main Grid */
-        .main-wrapper {
-            max-width: 1300px; margin: 0 auto;
+        /* THE TOP ROW - Locked height for perfect alignment */
+        .top-row {
             display: grid;
-            grid-template-columns: 300px 1fr 300px; 
+            grid-template-columns: 320px 1fr 320px;
             gap: 20px;
+            height: 550px; /* Lock all 3 columns to this height */
         }
 
-        .section-title { font-family: 'VT323'; font-size: 24px; margin-bottom: 10px; display: block; letter-spacing: 1px; }
+        .col { display: flex; flex-direction: column; }
+        .section-title { font-family: 'VT323'; font-size: 24px; margin-bottom: 10px; display: block; letter-spacing: 1px; text-align: center; }
         .box { background: var(--glass); border: 1px solid var(--border); border-radius: 20px; backdrop-filter: blur(10px); padding: 20px; }
 
-        /* Left Column */
-        .col-left { display: flex; flex-direction: column; gap: 20px; }
+        /* Left Column Alignment */
+        .socials-area { margin-bottom: 20px; }
         .social-btn {
-            display: flex; align-items: center; gap: 12px; padding: 12px;
+            display: flex; align-items: center; gap: 12px; padding: 10px 15px;
             background: var(--glass); border: 1px solid var(--border); border-radius: 12px;
-            text-decoration: none; color: white; font-family: 'VT323'; font-size: 18px; margin-bottom: 8px;
+            text-decoration: none; color: white; font-family: 'VT323'; font-size: 18px; margin-bottom: 10px;
         }
         .social-btn svg { width: 22px; fill: white; }
-
-        .terminal {
-            height: 380px; background: rgba(0,0,0,0.5); display: flex; flex-direction: column;
-        }
-        #output { flex-grow: 1; overflow-y: auto; font-family: 'VT323'; font-size: 17px; color: #aaffaa; padding-right: 5px; }
-        .input-line { display: flex; gap: 8px; font-family: 'VT323'; color: #aaffaa; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
+        .terminal { flex-grow: 1; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow: hidden; }
+        #output { flex-grow: 1; overflow-y: auto; font-family: 'VT323'; font-size: 17px; color: #aaffaa; padding-bottom: 10px; }
+        .input-line { display: flex; gap: 8px; font-family: 'VT323'; color: #aaffaa; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
         #input { background: transparent; border: none; outline: none; color: white; width: 100%; font-family: 'VT323'; font-size: 18px; }
 
         /* Center Column - Wall of Fanart */
-        .col-center { text-align: center; }
         .fanart-wall { 
             display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: 1fr 1fr; 
-            gap: 15px; height: 500px; /* Fixed height to prevent squishing */
+            gap: 15px; height: 100%; flex-grow: 1;
         }
         .art-container { position: relative; border: 1px solid var(--border); border-radius: 15px; overflow: hidden; background: #080808; }
         .art-container img { width: 100%; height: 100%; object-fit: cover; }
         .vertical { grid-row: span 2; }
-        
-        /* Creator name styling - Vertical */
-        .c-name { 
-            position: absolute; font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; 
-            letter-spacing: 2px; font-weight: 600; white-space: nowrap;
-        }
+        .c-name { position: absolute; font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
         .c-left { transform: rotate(-90deg); left: -40px; top: 50%; }
         .c-right { transform: rotate(90deg); right: -40px; top: 50%; }
-        .c-bottom { bottom: 5px; width: 100%; left: 0; }
+        .c-bottom { bottom: 8px; width: 100%; text-align: center; left: 0; }
 
-        /* Right Column */
-        .col-right { text-align: center; }
-        .gloom-title { font-family: 'Pinyon Script'; font-size: 28px; color: var(--purple); margin-bottom: 5px; display: block; }
-        .gloom-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 15px; border: 1px solid var(--border); }
-        .gloom-sub { margin-top: 10px; font-size: 14px; opacity: 0.7; }
+        /* Right Column - Gloomwood Extended */
+        .gloomwood-box { height: 100%; display: flex; flex-direction: column; text-align: center; }
+        .gloom-title { font-family: 'Pinyon Script'; font-size: 32px; color: var(--purple); margin-bottom: 10px; }
+        .gloom-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; padding-bottom: 10px; }
+        .gloom-img { width: 100%; flex-grow: 1; object-fit: cover; border-radius: 15px; border: 1px solid var(--border); max-height: 380px; }
+        .gloom-sub { margin-top: 15px; font-size: 15px; font-weight: 500; }
 
-        /* Bottom Section - Moved UP */
-        .bottom-area { grid-column: 1 / 4; display: flex; flex-direction: column; gap: 15px; margin-top: 0; }
-        .interest-box { padding: 25px; text-align: center; font-size: 14px; color: rgba(255,255,255,0.6); min-height: 80px; display: flex; align-items: center; justify-content: center; }
+        /* Bottom Area */
+        .bottom-area { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .interest-box { padding: 25px; text-align: center; font-size: 15px; color: rgba(255,255,255,0.6); }
 
-        /* Next Page Arrow */
         .next-btn {
-            position: fixed; bottom: 25px; right: 25px;
-            width: 45px; height: 30px; border: 1px solid var(--border); background: var(--glass);
-            border-radius: 6px; display: flex; align-items: center; justify-content: center;
-            color: white; text-decoration: none; transition: 0.3s;
+            position: fixed; bottom: 25px; right: 25px; width: 45px; height: 30px; 
+            border: 1px solid var(--border); background: var(--glass); border-radius: 6px; 
+            display: flex; align-items: center; justify-content: center; color: white; text-decoration: none;
         }
-        .next-btn:hover { border-color: var(--purple); background: rgba(255,255,255,0.1); }
-        
+
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 10px; }
     </style>
@@ -99,59 +95,60 @@
     <div class="bg"><div class="gradient"></div><div class="scanlines"></div></div>
 
     <div class="main-wrapper">
-        <div style="grid-column: 1/4;">
-            <div class="back-nav"><a href="index.html" class="btn-back">← back</a></div>
-        </div>
+        <div class="back-nav"><a href="index.html" class="btn-back">← back</a></div>
 
-        <!-- Column 1 -->
-        <div class="col-left">
-            <div>
-                <span class="section-title">links to socials</span>
-                <a href="https://steamcommunity.com/profiles/76561199448716750/" target="_blank" class="social-btn">
-                    <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 6.627 5.37 12 12 12 6.626 0 12-5.373 12-12 0-6.627-5.374-12-12-12zm0 16.923c-.945 0-1.713-.768-1.713-1.713s.768-1.712 1.713-1.712 1.713.767 1.713 1.712-.768 1.713-1.713 1.713zm.001-6.19c-1.39 0-2.518 1.128-2.518 2.518 0 1.39 1.128 2.518 2.518 2.518s2.519-1.128 2.519-2.518c0-1.39-1.129-2.518-2.519-2.518zm1.085-3.08l1.04 2.87c.218.601.077 1.25-.366 1.68-.328.328-.758.508-1.22.508-.31 0-.61-.08-.88-.23l-3.32 1.01c-.01.12-.02.24-.02.37 0 1.58 1.28 2.86 2.86 2.86s2.86-1.28 2.86-2.86c0-1.54-1.22-2.79-2.75-2.86l.66-2.27c.18.04.36.06.55.06.56 0 1.08-.22 1.48-.62.4-.4.62-.92.62-1.48 0-.48-.16-.94-.46-1.31l-.05-.06zm-1.08 1.58c-.31 0-.56-.25-.56-.56s.25-.56.56-.56.56.25.56.56-.25.56-.56.56z"/></svg>
-                    chronia
-                </a>
-                <a href="https://namemc.com/profile/chronia69.1" target="_blank" class="social-btn">
-                    <svg viewBox="0 0 24 24"><path d="M4 2h16c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2zm2 4v4h4V6H6zm8 0v4h4V6h-4zM6 14v4h4v-4H6zm8 0v4h4v-4h-4z"/></svg>
-                    chronia69
-                </a>
-            </div>
-            <div class="box terminal">
-                <div id="output">Type /help to show commands<br><br></div>
-                <div class="input-line"><span>></span><input type="text" id="input" autofocus autocomplete="off"></div>
-            </div>
-        </div>
-
-        <!-- Column 2 -->
-        <div class="col-center">
-            <span class="section-title">wall of fanart!</span>
-            <div class="fanart-wall">
-                <div class="art-container vertical">
-                    <img src="fanart.png">
-                    <span class="c-name c-left">creator's name</span>
+        <div class="top-row">
+            <!-- Col 1 -->
+            <div class="col">
+                <div class="socials-area">
+                    <span class="section-title" style="text-align: left;">Links to socials</span>
+                    <a href="https://steamcommunity.com/profiles/76561199448716750/" target="_blank" class="social-btn">
+                        <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 6.627 5.37 12 12 12 6.626 0 12-5.373 12-12 0-6.627-5.374-12-12-12zm0 16.923c-.945 0-1.713-.768-1.713-1.713s.768-1.712 1.713-1.712 1.713.767 1.713 1.712-.768 1.713-1.713 1.713zm.001-6.19c-1.39 0-2.518 1.128-2.518 2.518 0 1.39 1.128 2.518 2.518 2.518s2.519-1.128 2.519-2.518c0-1.39-1.129-2.518-2.519-2.518zm1.085-3.08l1.04 2.87c.218.601.077 1.25-.366 1.68-.328.328-.758.508-1.22.508-.31 0-.61-.08-.88-.23l-3.32 1.01c-.01.12-.02.24-.02.37 0 1.58 1.28 2.86 2.86 2.86s2.86-1.28 2.86-2.86c0-1.54-1.22-2.79-2.75-2.86l.66-2.27c.18.04.36.06.55.06.56 0 1.08-.22 1.48-.62.4-.4.62-.92.62-1.48 0-.48-.16-.94-.46-1.31l-.05-.06zm-1.08 1.58c-.31 0-.56-.25-.56-.56s.25-.56.56-.56.56.25.56.56-.25.56-.56.56z"/></svg>
+                        chronia
+                    </a>
+                    <a href="https://namemc.com/profile/chronia69.1" target="_blank" class="social-btn">
+                        <svg viewBox="0 0 24 24"><path d="M4 2h16c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2zm2 4v4h4V6H6zm8 0v4h4V6h-4zM6 14v4h4v-4H6zm8 0v4h4v-4h-4z"/></svg>
+                        chronia69
+                    </a>
                 </div>
-                <div class="art-container">
-                    <img src="fanart2.png">
-                    <span class="c-name c-right">creator's name</span>
-                </div>
-                <div class="art-container">
-                    <img src="fanart3.png">
-                    <span class="c-name c-bottom">creator's name</span>
+                <div class="box terminal">
+                    <div id="output">Type /help to show commands<br><br></div>
+                    <div class="input-line"><span>></span><input type="text" id="input" autofocus autocomplete="off"></div>
                 </div>
             </div>
-        </div>
 
-        <!-- Column 3 -->
-        <div class="col-right">
-            <span class="gloom-title">my beloved gloomwood</span>
-            <div class="box" style="padding:15px;">
-                <img src="gloomwood.png" class="gloom-img">
-                <p class="gloom-sub">gloomwood fanart</p>
-                <span style="font-family:'VT323'; opacity:0.3; font-size:12px;">creator's name</span>
+            <!-- Col 2 -->
+            <div class="col">
+                <span class="section-title">Wall of fanart!</span>
+                <div class="fanart-wall">
+                    <div class="art-container vertical">
+                        <img src="fanart.png">
+                        <span class="c-name c-left">creator's name</span>
+                    </div>
+                    <div class="art-container">
+                        <img src="fanart2.png">
+                        <span class="c-name c-right">creator's name</span>
+                    </div>
+                    <div class="art-container">
+                        <img src="fanart3.png">
+                        <span class="c-name c-bottom">creator's name</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Col 3 -->
+            <div class="col">
+                <span class="gloom-title" style="text-align: right;">My beloved gloomwood</span>
+                <div class="box gloomwood-box">
+                    <div class="gloom-content">
+                        <img src="gloomwood.png" class="gloom-img">
+                        <p class="gloom-sub">Gloomwood fanart</p>
+                        <span style="font-family:'VT323'; opacity:0.3; font-size:12px;">creator's name</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Bottom area - Tight to the elements above -->
         <div class="bottom-area">
             <div class="box interest-box">small paragraph about my intrests</div>
             <div class="box interest-box">bigger paragraph about my intrests</div>
@@ -163,7 +160,6 @@
     <script>
         const input = document.getElementById('input');
         const output = document.getElementById('output');
-
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const cmd = input.value.toLowerCase().trim();
@@ -174,7 +170,6 @@
                 else if (cmd === 'neofetch') res = '<img src="neo.png" style="width:120px; margin:5px 0;"><br>ram: 12gb<br>gpu: rx 6800 xt<br>cpu: i7-10700k';
                 else if (cmd === 'throzyckd') res = 'putt';
                 else res = '<span style="color:red">command not found</span>';
-
                 output.innerHTML += `<div><span style="color:#fff; opacity:0.6">> ${cmd}</span><br>${res}</div><br>`;
                 input.value = '';
                 output.scrollTop = output.scrollHeight;
