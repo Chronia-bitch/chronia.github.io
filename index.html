@@ -91,7 +91,7 @@
   #spotify-track { color: #fff; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   #spotify-artist { color: rgba(255,255,255,0.4); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
 
-  /* Hover Tooltip */
+  /* Tooltip on Hover (Rounded Box) */
   .spotify-box:hover::after {
     content: attr(data-tooltip);
     position: absolute;
@@ -151,7 +151,7 @@
   <script>
     const DISCORD_ID = "987815885702041610";
 
-    // ============= LANYARD WS =============
+    // ============= LANYARD WS (FIXED) =============
     function updateLanyard(data) {
       const { discord_status, listening_to_spotify, spotify } = data;
       const dot = document.getElementById('status-dot');
@@ -163,11 +163,13 @@
       const box = document.getElementById('spotify-box');
 
       if (listening_to_spotify && spotify) {
-        track.innerText = spotify.track;
+        // Changed spotify.track to spotify.song (The API uses .song)
+        track.innerText = spotify.song;
         artist.innerText = `by ${spotify.artist}`;
         album.src = spotify.album_art_url;
         album.style.opacity = "1";
-        box.setAttribute('data-tooltip', `${spotify.track}\nby ${spotify.artist}`);
+        // Updated tooltip to use .song
+        box.setAttribute('data-tooltip', `${spotify.song}\nby ${spotify.artist}`);
       } else {
         track.innerText = "Not listening to anything";
         artist.innerText = "Spotify";
@@ -203,12 +205,10 @@
     window.addEventListener('mousemove', (e)=>{
       const rect = card.getBoundingClientRect();
       if(hoveringCard){
-        // Tilt more when hovering directly
         const relX = (e.clientX - rect.left)/rect.width - 0.5;
         const relY = (e.clientY - rect.top)/rect.height - 0.5;
         targetRotY = relX * 18; targetRotX = -relY * 18; targetScale = 1.015;
       } else {
-        // Subtle tilt when mouse is anywhere else
         const cx = rect.left + rect.width/2; const cy = rect.top + rect.height/2;
         const relX = (e.clientX - cx)/window.innerWidth;
         const relY = (e.clientY - cy)/window.innerHeight;
@@ -217,7 +217,6 @@
     });
 
     function tickTilt(){
-      // Smooth interpolation (lerp)
       curRotX += (targetRotX - curRotX) * 0.08;
       curRotY += (targetRotY - curRotY) * 0.08;
       curScale += (targetScale - curScale) * 0.08;
