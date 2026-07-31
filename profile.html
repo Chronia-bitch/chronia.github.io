@@ -3,51 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chronia | Archive</title>
+    <title>Chronia | Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@300;400;600&family=Pinyon+Script&display=swap" rel="stylesheet">
     <style>
         :root {
-            --purple: #b18cf0;
-            --purple-glow: rgba(177, 140, 240, 0.3);
-            --glass: rgba(10, 10, 10, 0.6);
+            --theme-color: #b18cf0; /* Keeping your purple but using the new system */
+            --black: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
             --border: rgba(255, 255, 255, 0.08);
+            --transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         * { box-sizing: border-box; cursor: crosshair; }
 
         body {
-            background: #050505; color: #e0e0e0; font-family: 'Inter', sans-serif;
-            margin: 0; padding: 20px; min-height: 100vh; line-height: 1.6; overflow-x: hidden;
+            background: var(--black); 
+            color: #e0e0e0; 
+            font-family: 'Inter', sans-serif;
+            margin: 0; 
+            padding: 40px 20px; 
+            min-height: 100vh; 
+            line-height: 1.6; 
+            overflow-x: hidden;
         }
 
-        /* --- Background Effects --- */
-        .bg-layer { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
-        .gradient-orb { 
-            position: absolute; width: 600px; height: 600px; 
-            background: radial-gradient(circle, var(--purple-glow) 0%, transparent 70%); 
-            top: -200px; left: -200px; filter: blur(80px); opacity: 0.4;
+        /* --- Animated Grid Background (from Characters) --- */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), 
+                              linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+            z-index: -1; opacity: 0.4;
+            animation: gridMove 20s linear infinite;
         }
-        .scanlines { 
-            position: fixed; inset: 0; 
-            background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 51%); 
-            background-size: 100% 4px; z-index: 10; pointer-events: none; opacity: 0.1;
+
+        @keyframes gridMove {
+            from { transform: translateY(0); }
+            to { transform: translateY(50px); }
+        }
+
+        /* --- Scanlines --- */
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), 
+                        linear-gradient(90deg, rgba(177, 140, 240, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
+            background-size: 100% 4px, 3px 100%; pointer-events: none; z-index: 100;
         }
 
         .main-wrapper {
             max-width: 1200px; margin: 0 auto;
             display: flex; flex-direction: column; gap: 30px;
+            position: relative; z-index: 10;
         }
 
         /* --- Components --- */
         .box { 
-            background: var(--glass); border: 1px solid var(--border); 
-            border-radius: 12px; backdrop-filter: blur(12px); padding: 24px;
+            background: var(--glass); 
+            border: 1px solid var(--border); 
+            border-radius: 4px; 
+            backdrop-filter: blur(15px); 
+            padding: 24px;
+            transition: var(--transition);
+        }
+        .box:hover {
+            border-color: var(--theme-color);
+            box-shadow: 0 0 20px rgba(177, 140, 240, 0.1);
         }
 
         .section-title { 
-            font-family: 'VT323'; font-size: 20px; color: var(--purple); 
-            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; display: block;
+            font-family: 'VT323'; font-size: 22px; color: var(--theme-color); 
+            text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; 
+            display: block; text-shadow: 0 0 10px var(--theme-color);
         }
+
+        /* --- Navigation --- */
+        .back-nav { margin-bottom: 10px; }
+        .back-nav a { 
+            color: rgba(255,255,255,0.4); text-decoration: none; font-family: 'VT323'; 
+            font-size: 20px; transition: 0.3s; text-transform: uppercase;
+        }
+        .back-nav a:hover { color: var(--theme-color); letter-spacing: 2px; }
 
         /* --- Layout --- */
         .top-row {
@@ -59,93 +95,120 @@
         .col-sidebar { display: flex; flex-direction: column; gap: 20px; }
         
         .social-btn {
-            display: flex; align-items: center; gap: 12px; padding: 12px;
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-            border-radius: 8px; text-decoration: none; color: #fff;
-            font-family: 'VT323'; font-size: 18px; transition: 0.2s; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 12px; padding: 15px;
+            background: var(--glass); border: 1px solid var(--border);
+            border-radius: 4px; text-decoration: none; color: #fff;
+            font-family: 'VT323'; font-size: 18px; transition: var(--transition); 
+            margin-bottom: 10px; text-transform: uppercase;
         }
-        .social-btn:hover { background: var(--purple); color: #000; transform: translateX(5px); }
+        .social-btn:hover { 
+            background: rgba(177, 140, 240, 0.1); 
+            border-color: var(--theme-color);
+            transform: translateX(8px); 
+            box-shadow: 0 0 15px var(--theme-color);
+        }
         .social-btn svg { width: 20px; fill: currentColor; }
 
-        /* TERMINAL - FIXED SIZE FIX */
+        /* --- Terminal --- */
         .terminal { 
-            height: 380px; /* Locked height so it never resizes the page */
+            height: 380px; 
             display: flex; flex-direction: column;
-            background: rgba(0,0,0,0.4);
-            border-top: 2px solid var(--purple);
+            background: rgba(0,0,0,0.6);
+            border-top: 2px solid var(--theme-color) !important;
             font-family: 'VT323';
-            overflow: hidden; /* Keeps the container rigid */
+            overflow: hidden;
         }
         #output { 
-            flex-grow: 1; 
-            overflow-y: auto; /* Internal scrolling only */
-            color: #aaffaa; 
-            font-size: 16px;
-            padding-right: 5px;
+            flex-grow: 1; overflow-y: auto; color: #aaffaa; 
+            font-size: 16px; padding-right: 5px; opacity: 0.8;
         }
         .input-line { 
             display: flex; gap: 8px; align-items: center; 
-            padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); 
-            flex-shrink: 0; /* Prevents input line from disappearing */
+            padding-top: 10px; border-top: 1px solid var(--border); 
         }
         #input { background: transparent; border: none; outline: none; color: #fff; width: 100%; font-family: 'VT323'; font-size: 18px; }
 
-        /* Art Wall */
+        /* --- Art Wall --- */
         .art-wall { display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; }
-        .art-item { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #000; }
-        .art-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.5s; }
-        .art-item:hover img { opacity: 1; }
+        .art-item { 
+            position: relative; border-radius: 4px; overflow: hidden; 
+            border: 1px solid var(--border); background: #000;
+            transition: var(--transition);
+        }
+        .art-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 0.5s; }
+        .art-item:hover { border-color: var(--theme-color); }
+        .art-item:hover img { opacity: 1; transform: scale(1.05); }
         .art-item.featured { grid-row: span 2; }
-        .artist-tag { position: absolute; bottom: 8px; right: 8px; font-family: 'VT323'; font-size: 12px; background: rgba(0,0,0,0.7); padding: 2px 8px; }
+        .artist-tag { 
+            position: absolute; bottom: 10px; right: 10px; font-family: 'VT323'; 
+            font-size: 14px; background: var(--black); padding: 2px 10px; border: 1px solid var(--border);
+        }
 
-        /* Gloomwood */
-        .gloom-box { text-align: center; display: flex; flex-direction: column; height: 100%; animation: float 6s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        .gloom-title { font-family: 'Pinyon Script'; font-size: 36px; color: var(--purple); margin: 0 0 10px 0; }
-        .gloom-img { width: 100%; border-radius: 8px; border: 1px solid var(--border); flex-grow: 1; object-fit: cover; }
+        /* --- Gloomwood Box --- */
+        .gloom-box { 
+            text-align: center; display: flex; flex-direction: column; 
+            height: 100%; animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .gloom-title { font-family: 'Pinyon Script'; font-size: 38px; color: var(--theme-color); margin: 0 0 15px 0; text-shadow: 0 0 15px var(--theme-color); }
+        .gloom-img { 
+            width: 100%; border-radius: 4px; border: 1px solid var(--border); 
+            flex-grow: 1; object-fit: cover; filter: grayscale(0.5) brightness(0.8);
+            transition: 0.5s;
+        }
+        .gloom-box:hover .gloom-img { filter: grayscale(0) brightness(1); }
 
-        /* Bottom Paragraphs */
+        /* --- Bottom Section --- */
         .bottom-area { display: flex; flex-direction: column; gap: 20px; padding-bottom: 60px; }
-        .interest-box { border-left: 3px solid var(--purple); }
+        .interest-box { 
+            border-left: 4px solid var(--theme-color); 
+            font-size: 15px; color: rgba(255,255,255,0.7);
+        }
 
-        .back-nav a { color: rgba(255,255,255,0.4); text-decoration: none; font-family: 'VT323'; font-size: 20px; }
-        .back-nav a:hover { color: var(--purple); }
-
+        /* --- Next Button (matches back button) --- */
         .next-btn {
-            position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; 
-            background: var(--glass); border: 1px solid var(--border); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: white; text-decoration: none;
+            position: fixed; bottom: 40px; right: 40px; width: 60px; height: 60px; 
+            background: var(--glass); border: 1px solid var(--border); border-radius: 4px;
+            display: flex; align-items: center; justify-content: center; color: white; 
+            text-decoration: none; font-size: 24px; backdrop-filter: blur(10px);
+            transition: var(--transition); z-index: 101;
+        }
+        .next-btn:hover { 
+            border-color: var(--theme-color); 
+            background: rgba(255,255,255,0.1); 
+            box-shadow: 0 0 20px var(--theme-color);
+            transform: scale(1.1);
         }
 
         ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--purple); }
+        ::-webkit-scrollbar-thumb { background: var(--theme-color); }
     </style>
 </head>
 <body>
 
-    <div class="bg-layer"><div class="gradient-orb"></div><div class="scanlines"></div></div>
+    <div class="scanlines"></div>
 
     <div class="main-wrapper">
-        <div class="back-nav"><a href="index.html">← back</a></div>
+        <div class="back-nav"><a href="index.html">← Return to Main</a></div>
 
         <div class="top-row">
             <div class="col-sidebar">
                 <div class="links">
-                    <span class="section-title">Links</span>
+                    <span class="section-title">Directory</span>
                     <a href="https://steamcommunity.com/profiles/76561199448716750/" target="_blank" class="social-btn">
                         <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 6.627 5.37 12 12 12 6.626 0 12-5.373 12-12 0-6.627-5.374-12-12-12zm0 16.923c-.945 0-1.713-.768-1.713-1.713s.768-1.712 1.713-1.712 1.713.767 1.713 1.712-.768 1.713-1.713 1.713zm.001-6.19c-1.39 0-2.518 1.128-2.518 2.518 0 1.39 1.128 2.518 2.518 2.518s2.519-1.128 2.519-2.518c0-1.39-1.129-2.518-2.519-2.518zm1.085-3.08l1.04 2.87c.218.601.077 1.25-.366 1.68-.328.328-.758.508-1.22.508-.31 0-.61-.08-.88-.23l-3.32 1.01c-.01.12-.02.24-.02.37 0 1.58 1.28 2.86 2.86 2.86s2.86-1.28 2.86-2.86c0-1.54-1.22-2.79-2.75-2.86l.66-2.27c.18.04.36.06.55.06.56 0 1.08-.22 1.48-.62.4-.4.62-.92.62-1.48 0-.48-.16-.94-.46-1.31l-.05-.06zm-1.08 1.58c-.31 0-.56-.25-.56-.56s.25-.56.56-.56.56.25.56.56-.25.56-.56.56z"/></svg>
-                        chronia
+                        Steam / chronia
                     </a>
                     <a href="https://namemc.com/profile/chronia69.1" target="_blank" class="social-btn">
                         <svg viewBox="0 0 24 24"><path d="M4 2h16c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2zm2 4v4h4V6H6zm8 0v4h4V6h-4zM6 14v4h4v-4H6zm8 0v4h4v-4h-4z"/></svg>
-                        chronia69
+                        NameMC / chronia69
                     </a>
                 </div>
                 
                 <div class="box terminal">
-                    <div id="output">Type /help to show commands<br><br></div>
+                    <div id="output"><br>Type /help for access protocols<br><br></div>
                     <div class="input-line">
-                        <span>></span>
+                        <span style="color:var(--theme-color)">root@chronia:~$</span>
                         <input type="text" id="input" autofocus autocomplete="off">
                     </div>
                 </div>
@@ -154,15 +217,15 @@
             <div class="art-wall">
                 <div class="art-item featured">
                     <img src="fanart.png">
-                    <span class="artist-tag">creator's name</span>
+                    <span class="artist-tag">Visual_Log_01</span>
                 </div>
                 <div class="art-item">
                     <img src="fanart2.png">
-                    <span class="artist-tag">creator's name</span>
+                    <span class="artist-tag">Visual_Log_02</span>
                 </div>
                 <div class="art-item">
                     <img src="fanart3.png">
-                    <span class="artist-tag">creator's name</span>
+                    <span class="artist-tag">Visual_Log_03</span>
                 </div>
             </div>
 
@@ -170,14 +233,20 @@
                 <div class="box gloom-box">
                     <h2 class="gloom-title">Gloomwood</h2>
                     <img src="gloomwood.png" class="gloom-img">
-                    <p style="font-family:'VT323'; margin-top:10px; opacity:0.6;">creator's name</p>
+                    <p style="font-family:'VT323'; margin-top:15px; opacity:0.5; letter-spacing: 2px;">CRITICAL_FILE_ENTRY</p>
                 </div>
             </div>
         </div>
 
         <div class="bottom-area">
-            <div class="box interest-box">small paragraph about my intrests</div>
-            <div class="box interest-box">bigger paragraph about my intrests</div>
+            <div class="box interest-box">
+                <span class="section-title" style="font-size: 16px;">Core_Interests.v01</span>
+                Description of specific interests goes here. Using the same font rendering and border style as the character database to ensure visual continuity.
+            </div>
+            <div class="box interest-box">
+                <span class="section-title" style="font-size: 16px;">Extended_Bio.dat</span>
+                A larger section for information, formatted with the high-tech glass aesthetic. The blurred background ensures readability while keeping the animated grid visible behind the panel.
+            </div>
         </div>
     </div>
 
@@ -192,18 +261,16 @@
                 const cmd = input.value.toLowerCase().trim();
                 let res = '';
                 
-                if (cmd === '/help') res = '-cat<br>-secret<br>-neofetch';
-                else if (cmd === 'cat') res = '<img src="cat.png" style="width:100px; border-radius:8px; margin:5px 0;">';
-                else if (cmd === 'secret') res = '<img src="putt.png" style="width:100px; border-radius:8px; margin:5px 0;">';
-                else if (cmd === 'neofetch') res = '<img src="neo.png" style="width:120px; margin:5px 0;"><br>ram: 12gb<br>gpu: rx 6800 xt<br>cpu: i7-10700k';
-                else if (cmd === 'throzyckd') res = 'putt';
+                if (cmd === '/help') res = '<span style="color:var(--theme-color)">- cat</span> (view pet)<br><span style="color:var(--theme-color)">- secret</span> (view classified)<br><span style="color:var(--theme-color)">- neofetch</span> (system info)';
+                else if (cmd === 'cat') res = '<img src="cat.png" style="width:100px; border:1px solid var(--theme-color); border-radius:4px; margin:5px 0;">';
+                else if (cmd === 'secret') res = '<img src="putt.png" style="width:100px; border:1px solid var(--theme-color); border-radius:4px; margin:5px 0;">';
+                else if (cmd === 'neofetch') res = '<div style="display:flex; gap:15px;"><img src="neo.png" style="width:80px;"><div style="font-size:14px;">OS: ChroniaOS v2.0<br>RAM: 12GB DDR4<br>GPU: RX 6800 XT<br>CPU: i7-10700K</div></div>';
+                else if (cmd === 'throzyckd') res = 'Verification bypass: Access Granted.';
                 else if (cmd === '') return;
-                else res = '<span style="color:#ff5555">command not found</span>';
+                else res = '<span style="color:#ff5555">ERROR: Unknown Protocol</span>';
 
                 output.innerHTML += `<div><span style="opacity:0.5">> ${cmd}</span><br>${res}</div><br>`;
                 input.value = '';
-                
-                // Auto-scroll the terminal output
                 output.scrollTop = output.scrollHeight;
             }
         });
