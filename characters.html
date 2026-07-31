@@ -4,88 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>chronia | characters</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --theme-color: #c1483e;
-            --black: #020202;
-            --glass-bg: rgba(255,255,255,0.03);
-            --glass-border: rgba(255,255,255,0.12);
+            --black: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.1);
+            --transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
         }
 
         body, html { 
             background: var(--black); color: white; font-family: 'Inter', sans-serif; 
             margin: 0; padding: 0; overflow: hidden; height: 100vh;
+            perspective: 1000px;
+        }
+
+        /* Animated Grid Background */
+        body::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), 
+                              linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-position: center center;
+            mask-image: radial-gradient(circle, black, transparent 80%);
+            z-index: -1; opacity: 0.5;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            from { transform: translateY(0); }
+            to { transform: translateY(50px); }
+        }
+
+        /* Scanline Overlay */
+        .scanlines {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 4px, 3px 100%; pointer-events: none; z-index: 100;
         }
 
         /* Nav */
-        .nav-header { position: fixed; top: 30px; left: 30px; z-index: 100; }
+        .nav-header { position: fixed; top: 40px; left: 40px; z-index: 101; animation: fadeIn 1s ease-out; }
         .back-btn {
-            padding: 8px 16px; background: var(--glass-bg); border: 1px solid var(--glass-border);
-            border-radius: 8px; color: white; text-decoration: none; font-family: 'VT323'; font-size: 18px;
-            backdrop-filter: blur(10px); transition: 0.3s;
+            padding: 12px 24px; background: var(--glass); border: 1px solid var(--border);
+            border-radius: 4px; color: white; text-decoration: none; font-family: 'VT323'; font-size: 20px;
+            backdrop-filter: blur(10px); transition: var(--transition); text-transform: uppercase; letter-spacing: 2px;
         }
-        .back-btn:hover { border-color: var(--theme-color); background: rgba(255,255,255,0.1); }
+        .back-btn:hover { border-color: var(--theme-color); background: rgba(255,255,255,0.1); box-shadow: 0 0 20px var(--theme-color); }
 
         .main-stage {
-            display: grid; grid-template-columns: 350px 1fr 350px;
-            align-items: center; height: 100vh; padding: 0 80px; gap: 40px;
+            display: grid; grid-template-columns: 1fr 1.5fr 1fr;
+            align-items: center; height: 100vh; padding: 0 5vw; gap: 40px;
+            position: relative; z-index: 10;
         }
 
+        /* Decorative Elements */
         .side-para {
-            background: var(--glass-bg); border: 1px solid var(--glass-border);
-            padding: 30px; border-radius: 20px; backdrop-filter: blur(15px);
-            font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.7);
+            background: var(--glass); border-left: 4px solid var(--theme-color);
+            padding: 40px; border-radius: 0 20px 20px 0; backdrop-filter: blur(15px);
+            font-size: 16px; line-height: 1.8; color: rgba(255,255,255,0.8);
+            animation: slideInLeft 1s var(--transition);
         }
 
-        /* Consistent Sizing Container */
+        /* Character Center Display */
         .char-display { 
-            position: relative; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            height: 80vh; /* Fixed height for all characters */
+            position: relative; display: flex; justify-content: center; align-items: center;
+            height: 90vh; 
         }
         
         .char-img {
-            height: 100%; /* Forces images to match the 80vh container */
-            width: auto;
-            object-fit: contain;
-            z-index: 2; 
-            transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            /* The Glow Effect */
-            filter: drop-shadow(0 0 25px var(--theme-color));
+            height: 85%; width: auto; object-fit: contain; z-index: 5;
+            transition: var(--transition);
+            filter: drop-shadow(0 0 30px var(--theme-color));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .char-img.glitch-flash {
+            animation: glitchSwap 0.4s ease-out;
+        }
+
+        @keyframes glitchSwap {
+            0% { transform: scale(0.9) translateX(-20px); filter: brightness(3) hue-rotate(90deg); opacity: 0; }
+            50% { transform: scale(1.05) translateX(10px); filter: brightness(2) hue-rotate(-90deg); }
+            100% { transform: scale(1) translateX(0); filter: brightness(1) hue-rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
         .aura {
-            position: absolute; width: 400px; height: 400px;
-            background: var(--theme-color); filter: blur(120px);
-            opacity: 0.15; border-radius: 50%; z-index: 1; transition: 1s;
+            position: absolute; width: 500px; height: 500px;
+            background: var(--theme-color); filter: blur(150px);
+            opacity: 0.2; border-radius: 50%; z-index: 1; transition: 1s;
         }
 
-        .char-info { display: flex; flex-direction: column; gap: 30px; align-items: flex-end; text-align: right; }
+        /* Info Section */
+        .char-info { 
+            display: flex; flex-direction: column; gap: 40px; align-items: flex-end; text-align: right; 
+            animation: slideInRight 1s var(--transition);
+        }
 
         .name-box { 
-            border-bottom: 2px solid var(--theme-color); padding: 5px 0; 
-            font-family: 'VT323'; font-size: 48px;
-            transition: 0.5s;
+            font-family: 'VT323'; font-size: 72px; text-transform: uppercase;
+            color: white; line-height: 1; transition: var(--transition);
+            text-shadow: 3px 3px 0px var(--theme-color);
         }
-        .desc-box { max-width: 300px; line-height: 1.5; color: rgba(255,255,255,0.6); font-size: 15px; font-style: italic; }
 
-        /* Rotating Circle */
-        .art-circle-wrap { position: relative; width: 180px; height: 180px; }
+        .desc-box { 
+            max-width: 320px; font-size: 16px; font-style: italic;
+            color: rgba(255,255,255,0.5); border-right: 2px solid var(--theme-color);
+            padding-right: 20px; transition: var(--transition);
+        }
+
+        /* Selector Circle */
+        .art-circle-wrap { position: relative; width: 220px; height: 220px; }
         .rotating-elements {
             width: 100%; height: 100%; position: absolute;
-            animation: rotate 25s linear infinite;
+            animation: rotate 30s linear infinite;
         }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         .fan-art-node {
-            position: absolute; width: 55px; height: 55px; border-radius: 50%;
-            border: 2px solid white; overflow: hidden; cursor: pointer;
-            transition: 0.4s;
+            position: absolute; width: 70px; height: 70px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2); overflow: hidden; cursor: pointer;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: var(--black);
         }
-        .fan-art-node:hover { transform: scale(1.1); border-color: var(--theme-color); }
+        .fan-art-node:hover { transform: scale(1.3); border-color: var(--theme-color); box-shadow: 0 0 20px var(--theme-color); z-index: 10; }
         .fan-art-node img { width: 100%; height: 100%; object-fit: cover; }
 
         .node-1 { top: 0; left: 50%; transform: translate(-50%, -50%); }
@@ -93,20 +141,32 @@
         .node-3 { bottom: 10%; left: 0; transform: translate(-30%, 0); }
 
         .svg-text {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            pointer-events: none; animation: rotateReverse 30s linear infinite;
         }
-        textPath { font-family: 'VT323'; font-size: 13px; fill: rgba(255,255,255,0.4); letter-spacing: 2px; }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes rotateReverse { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+
+        /* Transitions */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInLeft { from { transform: translateX(-100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideInRight { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
     </style>
 </head>
 <body>
 
+    <div class="scanlines"></div>
+
     <div class="nav-header">
-        <a href="profile.html" class="back-btn">← Back</a>
+        <a href="profile.html" class="back-btn">/ Back to Terminal</a>
     </div>
 
     <div class="main-stage">
         <div class="side-para">
-            <p>Some of my few favorite characters from different media's!</p>
+            <h2 style="font-family: 'VT323'; color: var(--theme-color); margin-top:0;">DATABASE_V.02</h2>
+            <p>Archive sequence initiated. Visualizing high-priority subjects from across the Multiverse. Selection is required to proceed.</p>
         </div>
 
         <div class="char-display">
@@ -117,14 +177,14 @@
         <div class="char-info">
             <div class="art-circle-wrap">
                 <div class="rotating-elements">
-                    <svg class="svg-text" viewBox="0 0 200 200">
-                        <path id="txtPath" d="M 100, 100 m -85, 0 a 85,85 0 1,1 170,0 a 85,85 0 1,1 -170,0" fill="transparent"/>
-                        <text><textPath href="#txtPath" id="artist-label">@chronia — FAVORITES — @chronia — FAVORITES —</textPath></text>
-                    </svg>
                     <div class="fan-art-node node-1" onclick="update(0)"><img src="1.png" id="f1"></div>
                     <div class="fan-art-node node-2" onclick="update(1)"><img src="4.png" id="f2"></div>
                     <div class="fan-art-node node-3" onclick="update(2)"><img src="7.png" id="f3"></div>
                 </div>
+                <svg class="svg-text" viewBox="0 0 200 200">
+                    <path id="txtPath" d="M 100, 100 m -85, 0 a 85,85 0 1,1 170,0 a 85,85 0 1,1 -170,0" fill="transparent"/>
+                    <text><textPath href="#txtPath" id="artist-label" style="font-family: 'VT323'; fill: rgba(255,255,255,0.3); letter-spacing: 3px;">SELECT CHARACTER — ARCHIVE 0 — SELECT CHARACTER — ARCHIVE 0 —</textPath></text>
+                </svg>
             </div>
 
             <div class="name-box" id="name">Makima</div>
@@ -135,26 +195,37 @@
     <script>
         const chars = [
             { n:"Makima", c:"#c1483e", i:"Makima.png", a:"@chronia", d:"\"Did you forget? You're my pet. Only answer with 'yes' or 'woof.' I don't need a dog who says 'no.'\"", f:["1.png","2.png","3.png"]},
-            { n:"Lucy", c:"#f0d5fb", i:"Lucy.png", a:"@lucy_artist", d:"\"But you never had to save me. All I ever wanted was for you to live\"", f:["4.png","5.png","6.png"]},
-            { n:"Power", c:"#c88b8a", i:"power.png", a:"@power_artist", d:"\"I've decided to win the Nobel Prize! The humans will all kowtow to me!\"", f:["7.png","8.png","9.png"]}
+            { n:"Lucy", c:"#f0d5fb", i:"Lucy.png", a:"@lucy_artist", d:"\"But you never had to save me. All I ever wanted was for you to live.\"", f:["4.png","5.png","6.png"]},
+            { n:"Power", c:"#ff9a9e", i:"power.png", a:"@power_artist", d:"\"I've decided to win the Nobel Prize! The humans will all kowtow to me!\"", f:["7.png","8.png","9.png"]}
         ];
 
         function update(idx) {
             const ch = chars[idx];
-            document.documentElement.style.setProperty('--theme-color', ch.c);
-            document.getElementById('main-char').src = ch.i;
-            document.getElementById('name').innerText = ch.n;
-            document.getElementById('desc').innerText = ch.d;
-            document.getElementById('artist-label').textContent = `${ch.a.toUpperCase()} — FAVORITES — ${ch.a.toUpperCase()} — FAVORITES —`;
+            const img = document.getElementById('main-char');
+            
+            // Trigger Glitch Animation
+            img.classList.remove('glitch-flash');
+            void img.offsetWidth; // Trigger reflow
+            img.classList.add('glitch-flash');
+
+            // Update Content
+            setTimeout(() => {
+                document.documentElement.style.setProperty('--theme-color', ch.c);
+                img.src = ch.i;
+                document.getElementById('name').innerText = ch.n;
+                document.getElementById('desc').innerText = ch.d;
+                document.getElementById('artist-label').textContent = `${ch.a.toUpperCase()} — ARCHIVE ${idx} — ${ch.a.toUpperCase()} — ARCHIVE ${idx} —`;
+            }, 100);
         }
 
+        // Cycle the node images
         let step = 0;
         setInterval(() => {
             step = (step + 1) % 3;
             document.getElementById('f1').src = chars[0].f[step];
             document.getElementById('f2').src = chars[1].f[step];
             document.getElementById('f3').src = chars[2].f[step];
-        }, 4000);
+        }, 3000);
     </script>
 </body>
 </html>
