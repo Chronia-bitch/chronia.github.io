@@ -160,7 +160,6 @@
     overflow:hidden;
   }
 
-  /* CLEAN LIQUID GLASS SHEEN */
   .card::before{
     content:"";
     position:absolute;
@@ -169,19 +168,6 @@
     background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 40%);
     pointer-events:none;
     z-index:0;
-  }
-
-  .card::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    border-radius:44px;
-    padding:1px;
-    background: linear-gradient(155deg, rgba(255,255,255,0.45), rgba(255,255,255,0) 30%, rgba(255,255,255,0) 70%, rgba(255,255,255,0.2));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events:none;
   }
 
   .avatar-wrap{
@@ -212,6 +198,12 @@
     background: linear-gradient(135deg, var(--purple), #fff);
   }
 
+  /* Discord Status & Name */
+  .name-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
   .name{
     font-family:'VT323', monospace;
     font-size:28px;
@@ -219,6 +211,17 @@
     color:#fff;
     text-shadow: 0 0 10px rgba(255,255,255,0.2);
   }
+  .status-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #747f8d;
+    transition: all 0.4s ease;
+  }
+  .status-online { background: #43b581; box-shadow: 0 0 12px #43b581; }
+  .status-idle   { background: #faa61a; box-shadow: 0 0 12px #faa61a; }
+  .status-dnd    { background: #f04747; box-shadow: 0 0 12px #f04747; }
+
   .tagline{
     margin-top:4px;
     font-family:'VT323', monospace;
@@ -258,6 +261,7 @@
   }
 
   .visualizer-wrap{
+    position: relative;
     margin-top:28px;
     width:100%;
     height:56px;
@@ -265,10 +269,26 @@
     border:1px solid rgba(255,255,255,0.08);
     background: rgba(0,0,0,0.3);
     overflow:hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   #viz{ width:100%; height:100%; display:block; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
 
-  /* ================= SOUND TOGGLE ================= */
+  /* Spotify Text Styles */
+  .spotify-text {
+    position: absolute;
+    z-index: 10;
+    font-family: 'VT323', monospace;
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    pointer-events: none;
+    letter-spacing: 1px;
+    text-transform: lowercase;
+    text-align: center;
+    width: 90%;
+  }
+
   .sound-toggle{
     position:fixed;
     top:24px; right:24px;
@@ -328,7 +348,10 @@
         <img class="avatar" src="chronia6.png" alt="chronia">
       </div>
 
-      <div class="name">chronia</div>
+      <div class="name-container">
+        <div class="name">chronia</div>
+        <div id="status-dot" class="status-dot"></div>
+      </div>
       <div class="tagline">yeah</div>
 
       <div class="dock">
@@ -339,6 +362,7 @@
       </div>
 
       <div class="visualizer-wrap">
+        <div id="spotify-info" class="spotify-text"></div>
         <canvas id="viz"></canvas>
       </div>
     </div>
@@ -347,7 +371,45 @@
   <audio id="bgAudio" loop preload="auto"></audio>
 
   <script>
-    // ============= PARTICLES (INSTANT SPAWN) =============
+    // ============= LANYARD INTEGRATION =============
+    const DISCORD_ID = "987815885702041610";
+    const statusDot = document.getElementById('status-dot');
+    const spotifyInfo = document.getElementById('spotify-info');
+
+    function updateLanyard(data) {
+      const { discord_status, listening_to_spotify, spotify } = data;
+
+      // Update Dot Status
+      statusDot.className = 'status-dot';
+      if (discord_status === 'online') statusDot.classList.add('status-online');
+      else if (discord_status === 'idle') statusDot.classList.add('status-idle');
+      else if (discord_status === 'dnd') statusDot.classList.add('status-dnd');
+
+      // Update Spotify Status
+      if (listening_to_spotify && spotify) {
+        const artist = spotify.artist.split(';')[0];
+        const song = spotify.track.length > 25 ? spotify.track.substring(0, 22) + '...' : spotify.track;
+        spotifyInfo.innerText = `listening to: ${song} - ${artist}`;
+      } else {
+        spotifyInfo.innerText = "not listening to anything";
+      }
+    }
+
+    function initLanyard() {
+      const ws = new WebSocket('wss://api.lanyard.rest/socket');
+      ws.onmessage = (event) => {
+        const pkg = JSON.parse(event.data);
+        if (pkg.op === 1) {
+          ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
+          setInterval(() => ws.send(JSON.stringify({ op: 3 })), pkg.d.heartbeat_interval);
+        }
+        if (pkg.t === 'INIT_STATE' || pkg.t === 'PRESENCE_UPDATE') updateLanyard(pkg.d);
+      };
+      ws.onclose = () => setTimeout(initLanyard, 5000);
+    }
+    initLanyard();
+
+    // ============= PARTICLES =============
     const particleLayer = document.getElementById('particleLayer');
     const NUM_PARTICLES = 44;
     const particles = [];
@@ -416,14 +478,13 @@
     }
     tickTilt();
 
-    // ============= MERCURY LIQUID VISUALIZER =============
+    // ============= VISUALIZER =============
     const audio = document.getElementById('bgAudio');
     audio.src = "song.mp3"; 
     const canvas = document.getElementById('viz');
     const ctx = canvas.getContext('2d');
     let audioCtx, analyser, source, dataArray;
     let started = false;
-    let muted = false;
 
     const SAMPLE_POINTS = 20; 
     let smoothed = new Array(SAMPLE_POINTS).fill(0);
@@ -450,20 +511,13 @@
       const gap = (w / (SAMPLE_POINTS * 2)) * 0.3;
 
       ctx.fillStyle = '#fff';
-
       for(let i=0; i<SAMPLE_POINTS; i++){
-        // Logarithmic focus: takes lower/mid frequencies for better mercury movement
         let target = (dataArray[i] / 255) * h * 0.75;
-        // Fast interpolation (0.2) makes it fluid but responsive
         smoothed[i] += (target - smoothed[i]) * 0.2;
-        
         let bh = Math.max(6, smoothed[i]);
-
-        // Symmetrical mercury-like bars
         ctx.beginPath();
         ctx.roundRect(w/2 + i*(barWidth+gap), h/2 - bh/2, barWidth, bh, 20);
         ctx.fill();
-
         ctx.beginPath();
         ctx.roundRect(w/2 - barWidth - i*(barWidth+gap), h/2 - bh/2, barWidth, bh, 20);
         ctx.fill();
@@ -478,7 +532,7 @@
     resizeCanvas();
     drawViz();
 
-    // ============= UNMUTED START LOGIC =============
+    // ============= SOUND TOGGLE =============
     function attemptPlay(){
       if(started) return;
       initAudio();
@@ -486,18 +540,10 @@
         started = true;
         document.getElementById('iconOn').style.display = 'block';
         document.getElementById('iconOff').style.display = 'none';
-      }).catch(err => {
-        // browser blocked load-play, will wait for first click
-      });
+      }).catch(() => {});
     }
 
-    // Try immediately (usually fails on load)
-    attemptPlay();
-
-    // Force play unmuted on very first click anywhere
-    document.body.addEventListener('click', () => {
-      if(!started) attemptPlay();
-    }, { once: false });
+    document.body.addEventListener('click', () => { if(!started) attemptPlay(); }, { once: false });
 
     document.getElementById('soundToggle').addEventListener('click', (e)=>{
       e.stopPropagation();
