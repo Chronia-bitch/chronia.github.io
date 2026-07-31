@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chronia | characters</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --theme-color: #c1483e;
+            --black: #020202;
+            --glass-bg: rgba(255,255,255,0.03);
+            --glass-border: rgba(255,255,255,0.12);
+        }
+
+        body, html { 
+            background: var(--black); color: white; font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 0; overflow: hidden; height: 100vh;
+            transition: background 0.8s ease;
+        }
+
+        .main-stage {
+            display: grid; grid-template-columns: 1fr 1.5fr 1fr;
+            align-items: center; height: 100vh; padding: 0 50px;
+        }
+
+        /* Side Paragraph Box */
+        .side-para {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            padding: 30px; border-radius: 20px; backdrop-filter: blur(10px);
+        }
+
+        /* Center Character & Aura */
+        .char-display {
+            position: relative; display: flex; justify-content: center; align-items: center;
+        }
+        .char-img {
+            max-height: 80vh; z-index: 2; transition: 0.5s ease-in-out;
+            filter: drop-shadow(0 0 20px var(--theme-color));
+        }
+        .aura {
+            position: absolute; width: 400px; height: 600px;
+            background: var(--theme-color); filter: blur(120px);
+            opacity: 0.3; border-radius: 50%; z-index: 1;
+            transition: 0.8s;
+        }
+
+        /* Right Content */
+        .char-info { display: flex; flex-direction: column; gap: 40px; align-items: flex-end; text-align: right; }
+
+        .name-box { 
+            border: 1px solid var(--theme-color); padding: 10px 30px; 
+            font-family: 'VT323'; font-size: 40px; border-radius: 10px;
+        }
+        .desc-box { max-width: 300px; line-height: 1.5; color: rgba(255,255,255,0.8); }
+
+        /* Rotating Circle */
+        .art-circle-container {
+            position: relative; width: 220px; height: 220px;
+        }
+        .rotating-circle {
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 2px solid var(--glass-border); position: relative;
+            animation: rotate 20s linear infinite;
+        }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .fan-art-slice {
+            position: absolute; width: 60px; height: 60px; border-radius: 50%;
+            border: 2px solid white; overflow: hidden; cursor: pointer;
+            transition: 0.3s;
+        }
+        .fan-art-slice:hover { transform: scale(1.2); z-index: 10; }
+        .fan-art-slice img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Circular Text Path */
+        .svg-text {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; animation: rotate 20s linear infinite;
+        }
+        text { font-family: 'VT323'; font-size: 14px; fill: rgba(255,255,255,0.6); }
+
+        /* Position Slices */
+        .slice-1 { top: 0; left: 50%; transform: translate(-50%, -50%); }
+        .slice-2 { top: 50%; right: 0; transform: translate(50%, -50%); }
+        .slice-3 { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+    </style>
+</head>
+<body>
+
+    <div class="main-stage" id="stage">
+        <div class="side-para">
+            <p>Your custom text about these characters or your interests goes here. This box is perfectly aligned to the left of the main character showcase.</p>
+        </div>
+
+        <div class="char-display">
+            <div class="aura" id="aura"></div>
+            <img src="makima.png" class="char-img" id="main-char">
+        </div>
+
+        <div class="char-info">
+            <!-- Rotating Circle Section -->
+            <div class="art-circle-container">
+                <svg class="svg-text" viewBox="0 0 220 220">
+                    <path id="circlePath" d="M 110, 110 m -90, 0 a 90,90 0 1,1 180,0 a 90,90 0 1,1 -180,0" fill="transparent"/>
+                    <text>
+                        <textPath href="#circlePath" id="artist-names">
+                            @chronia — FAN ART 1 — @chronia — FAN ART 2 — @chronia — FAN ART 3
+                        </textPath>
+                    </text>
+                </svg>
+                <div class="rotating-circle" id="circle">
+                    <div class="fan-art-slice slice-1" onclick="changeChar(0)"><img src="1.png" id="img1"></div>
+                    <div class="fan-art-slice slice-2" onclick="changeChar(1)"><img src="4.png" id="img2"></div>
+                    <div class="fan-art-slice slice-3" onclick="changeChar(2)"><img src="7.png" id="img3"></div>
+                </div>
+            </div>
+
+            <div class="name-box" id="char-name">Makima</div>
+            <div class="desc-box" id="char-desc">"Did you forget? You're my pet. Only answer with 'yes' or 'woof.' I don't need a dog who says 'no.'"</div>
+        </div>
+    </div>
+
+    <script>
+        const data = [
+            {
+                name: "Makima",
+                color: "#c1483e",
+                img: "makima.png",
+                desc: "Did you forget? You're my pet. Only answer with 'yes' or 'woof.' I don't need a dog who says 'no.'",
+                fanart: ["1.png", "2.png", "3.png"],
+                artist: "@chronia"
+            },
+            {
+                name: "Lucy",
+                color: "#f0d5fb",
+                img: "lucy.png",
+                desc: "But you never had to save me. All I ever wanted was for you to live",
+                fanart: ["4.png", "5.png", "6.png"],
+                artist: "@artist_name"
+            },
+            {
+                name: "Power",
+                color: "#c88b8a",
+                img: "power.png",
+                desc: "Given there's nothing else to do, I've decided to win the Nobel Prize! Once I've earned such glorious esteem, the humans will all kowtow to me!",
+                fanart: ["7.png", "8.png", "9.png"],
+                artist: "@artist_name"
+            }
+        ];
+
+        function changeChar(index) {
+            const char = data[index];
+            document.documentElement.style.setProperty('--theme-color', char.color);
+            document.getElementById('main-char').src = char.img;
+            document.getElementById('char-name').innerText = char.name;
+            document.getElementById('char-desc').innerText = char.desc;
+            
+            // Change artist text in SVG
+            document.getElementById('artist-names').textContent = 
+                `${char.artist} — FAN ART 1 — ${char.artist} — FAN ART 2 — ${char.artist} — FAN ART 3`;
+        }
+
+        // Auto-cycle fanart images within slices every few seconds
+        let artStep = 0;
+        setInterval(() => {
+            artStep = (artStep + 1) % 3;
+            document.getElementById('img1').src = data[0].fanart[artStep];
+            document.getElementById('img2').src = data[1].fanart[artStep];
+            document.getElementById('img3').src = data[2].fanart[artStep];
+        }, 3000);
+    </script>
+</body>
+</html>

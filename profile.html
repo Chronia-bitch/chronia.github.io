@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chronia | profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pinyon+Script&family=VT323&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --purple: #9d7bc0;
+            --white-accent: #ffffff;
+            --black: #020202;
+            --glass-bg: rgba(255,255,255,0.03);
+            --glass-border: rgba(255,255,255,0.12);
+        }
+
+        body, html { 
+            background: var(--black); color: white; font-family: 'Inter', sans-serif; 
+            margin: 0; padding: 0; overflow-x: hidden; min-height: 100vh;
+        }
+
+        /* Reusing your Background effects */
+        .bg-elements { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+        .bg-gradient { position: absolute; inset: 0; background: linear-gradient(90deg, var(--purple) 0%, var(--black) 45%); opacity: 0.4; }
+        .bg-dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px); background-size: 30px 30px; }
+        .bg-scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, rgba(0,0,0,0.1) 0px, rgba(0,0,0,0.1) 1px, transparent 1px, transparent 3px); }
+
+        .container { 
+            max-width: 1200px; margin: 0 auto; padding: 60px 20px;
+            display: grid; grid-template-columns: 350px 1fr 300px; gap: 30px;
+        }
+
+        /* Generic Box Style */
+        .glass-box {
+            background: var(--glass-bg); border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px); border-radius: 24px; padding: 25px;
+        }
+
+        /* Left Side: Socials & Terminal */
+        .left-col { display: flex; flex-direction: column; gap: 20px; }
+        
+        .social-link {
+            display: flex; align-items: center; gap: 15px; padding: 15px;
+            text-decoration: none; color: white; transition: 0.3s;
+        }
+        .social-link:hover { background: rgba(255,255,255,0.05); border-radius: 15px; color: var(--purple); }
+        .social-link img { width: 30px; }
+        .social-link span { font-family: 'VT323'; font-size: 22px; }
+
+        /* Terminal */
+        .terminal {
+            height: 350px; background: rgba(0,0,0,0.6); border-radius: 15px;
+            font-family: 'VT323'; padding: 15px; display: flex; flex-direction: column;
+            border: 1px solid var(--glass-border); overflow: hidden;
+        }
+        #term-output { flex-grow: 1; overflow-y: auto; color: #aaffaa; font-size: 18px; margin-bottom: 10px; }
+        .term-input-line { display: flex; gap: 10px; color: #aaffaa; font-size: 18px; }
+        #term-input { background: transparent; border: none; outline: none; color: white; width: 100%; font-family: 'VT323'; font-size: 18px; }
+
+        /* Center: Fanart Wall */
+        .wall-of-fanart { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .art-item { position: relative; border-radius: 15px; overflow: hidden; border: 1px solid var(--glass-border); }
+        .art-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+        .art-item:hover img { transform: scale(1.05); }
+        .creator-tag {
+            position: absolute; bottom: 10px; left: -20px; background: rgba(0,0,0,0.7);
+            padding: 5px 15px; font-size: 12px; transform: rotate(90deg); transform-origin: left bottom;
+            border-top: 1px solid var(--purple);
+        }
+
+        /* Right Side: Gloomwood */
+        .gloomwood-box { text-align: center; }
+        .gloomwood-box img { width: 100%; border-radius: 15px; margin-bottom: 15px; border: 1px solid #c1483e; }
+        .artist-credit { font-family: 'VT323'; color: rgba(255,255,255,0.5); }
+
+        /* Bottom Paragraphs */
+        .interests { grid-column: 2 / 4; display: flex; flex-direction: column; gap: 20px; }
+        .interests p { line-height: 1.6; color: rgba(255,255,255,0.8); }
+
+        /* Navigation Arrow */
+        .next-page {
+            position: fixed; bottom: 30px; right: 30px;
+            width: 60px; height: 40px; background: var(--glass-bg);
+            border: 1px solid var(--glass-border); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; text-decoration: none; color: white;
+        }
+        .next-page:hover { border-color: var(--purple); transform: translateX(5px); }
+
+        .terminal-img { max-width: 100%; height: auto; border-radius: 8px; margin: 10px 0; border: 1px solid var(--purple); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-elements">
+        <div class="bg-gradient"></div>
+        <div class="bg-dots"></div>
+        <div class="bg-scanlines"></div>
+    </div>
+
+    <div class="container">
+        <!-- LEFT SIDE -->
+        <div class="left-col">
+            <div class="glass-box">
+                <h2 style="font-family:'VT323'; margin-top:0;">links to socials</h2>
+                <a href="https://steamcommunity.com/profiles/76561199448716750/" target="_blank" class="social-link">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/Steam_icon_logo.svg" alt="steam">
+                    <span>chronia</span>
+                </a>
+                <a href="#" class="social-link">
+                    <img src="https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/favicon-32x32.png" alt="minecraft">
+                    <span>chronia69</span>
+                </a>
+            </div>
+
+            <div class="terminal">
+                <div id="term-output">Type /help to see commands...</div>
+                <div class="term-input-line">
+                    <span>></span>
+                    <input type="text" id="term-input" autofocus autocomplete="off">
+                </div>
+            </div>
+        </div>
+
+        <!-- CENTER: WALL OF FANART -->
+        <div class="wall-of-fanart">
+            <div class="art-item" style="grid-row: span 2;">
+                <img src="fanart.png" alt="art">
+                <div class="creator-tag">@creator_name</div>
+            </div>
+            <div class="art-item">
+                <img src="fanart2.png" alt="art">
+                <div class="creator-tag">@creator_name</div>
+            </div>
+            <div class="art-item">
+                <img src="fanart3.png" alt="art">
+                <div class="creator-tag">@creator_name</div>
+            </div>
+        </div>
+
+        <!-- RIGHT SIDE: GLOOMWOOD -->
+        <div class="glass-box gloomwood-box">
+            <h3 style="font-family:'Pinyon Script'; font-size: 30px; margin-top:0;">my beloved gloomwood</h3>
+            <img src="gloomwood.png" alt="Gloomwood">
+            <p>gloomwood fanart</p>
+            <div class="artist-credit">artist "@chronia"</div>
+        </div>
+
+        <!-- BOTTOM CONTENT -->
+        <div class="interests">
+            <div class="glass-box">
+                <p>Insert your small paragraph about interests here. This area is designed to hold your personal text comfortably while maintaining the aesthetic.</p>
+            </div>
+            <div class="glass-box">
+                <p>Insert your bigger paragraph about interests here. You can talk about your favorite games, hobbies, or anything else that defines you. The glassmorphism effect ensures that the text is readable while the background effects subtly show through.</p>
+            </div>
+        </div>
+    </div>
+
+    <a href="characters.html" class="next-page">→</a>
+
+    <script>
+        const input = document.getElementById('term-input');
+        const output = document.getElementById('term-output');
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const cmd = input.value.toLowerCase().trim();
+                handleCommand(cmd);
+                input.value = '';
+            }
+        });
+
+        function handleCommand(cmd) {
+            let response = '';
+            
+            // Easter egg for putt
+            if (cmd === 'throzyckd') {
+                response = '<div>putt</div>';
+            } else if (cmd === '/help') {
+                response = 'Available commands:<br>-cat<br>-secret<br>-neofetch';
+            } else if (cmd === 'cat') {
+                response = 'Shows a picture of a cat here...<br><img src="cat.png" class="terminal-img">';
+            } else if (cmd === 'secret') {
+                response = '<img src="putt.png" class="terminal-img">';
+            } else if (cmd === 'neofetch') {
+                response = `
+                    <img src="neo.png" class="terminal-img">
+                    <div style="color:#fff">
+                        ram: 12gb<br>
+                        gpu: rx 6800 xt<br>
+                        cpu: i7-10700k
+                    </div>
+                `;
+            } else {
+                response = `Command not found: ${cmd}`;
+            }
+
+            const newLine = document.createElement('div');
+            newLine.innerHTML = `<span style="color:#fff">> ${cmd}</span><br>${response}<br><br>`;
+            output.appendChild(newLine);
+            output.scrollTop = output.scrollHeight;
+        }
+    </script>
+</body>
+</html>
