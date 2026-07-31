@@ -11,20 +11,13 @@
             --purple-glow: rgba(177, 140, 240, 0.3);
             --glass: rgba(10, 10, 10, 0.6);
             --border: rgba(255, 255, 255, 0.08);
-            --accent: #5ef1ff;
         }
 
         * { box-sizing: border-box; cursor: crosshair; }
 
         body {
-            background: #050505; 
-            color: #e0e0e0; 
-            font-family: 'Inter', sans-serif;
-            margin: 0; 
-            padding: 20px; 
-            min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
+            background: #050505; color: #e0e0e0; font-family: 'Inter', sans-serif;
+            margin: 0; padding: 20px; min-height: 100vh; line-height: 1.6; overflow-x: hidden;
         }
 
         /* --- Background Effects --- */
@@ -39,198 +32,152 @@
             background: linear-gradient(to bottom, transparent 50%, rgba(0,0,0,0.3) 51%); 
             background-size: 100% 4px; z-index: 10; pointer-events: none; opacity: 0.1;
         }
-        .noise {
-            position: fixed; inset: 0; z-index: 9; opacity: 0.03; pointer-events: none;
-            background-image: url('https://media.giphy.com/media/oEI9uWUicLmrC/giphy.gif');
-        }
 
         .main-wrapper {
             max-width: 1200px; margin: 0 auto;
             display: flex; flex-direction: column; gap: 30px;
-            animation: fadeIn 1s ease-out;
         }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- Components --- */
         .box { 
-            background: var(--glass); 
-            border: 1px solid var(--border); 
-            border-radius: 12px; 
-            backdrop-filter: blur(12px); 
-            padding: 24px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            transition: border 0.3s ease, transform 0.3s ease;
+            background: var(--glass); border: 1px solid var(--border); 
+            border-radius: 12px; backdrop-filter: blur(12px); padding: 24px;
         }
-        .box:hover { border-color: rgba(177, 140, 240, 0.4); }
 
         .section-title { 
             font-family: 'VT323'; font-size: 20px; color: var(--purple); 
             text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; display: block;
         }
 
-        /* --- Top Layout --- */
+        /* --- Layout --- */
         .top-row {
             display: grid;
-            grid-template-columns: 300px 1fr 300px;
+            grid-template-columns: 320px 1fr 320px;
             gap: 25px;
-            min-height: 580px; /* Changed from height to min-height */
         }
 
-        /* Col 1: Links & Terminal */
         .col-sidebar { display: flex; flex-direction: column; gap: 20px; }
         
         .social-btn {
             display: flex; align-items: center; gap: 12px; padding: 12px;
             background: rgba(255,255,255,0.03); border: 1px solid var(--border);
             border-radius: 8px; text-decoration: none; color: #fff;
-            font-family: 'VT323'; font-size: 18px; transition: 0.2s;
+            font-family: 'VT323'; font-size: 18px; transition: 0.2s; margin-bottom: 10px;
         }
         .social-btn:hover { background: var(--purple); color: #000; transform: translateX(5px); }
         .social-btn svg { width: 20px; fill: currentColor; }
 
+        /* TERMINAL - FIXED SIZE FIX */
         .terminal { 
-            flex-grow: 1; font-family: 'VT323'; font-size: 16px; 
-            display: flex; flex-direction: column; border-top: 2px solid var(--purple);
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+            height: 380px; /* Locked height so it never resizes the page */
+            display: flex; flex-direction: column;
+            background: rgba(0,0,0,0.4);
+            border-top: 2px solid var(--purple);
+            font-family: 'VT323';
+            overflow: hidden; /* Keeps the container rigid */
         }
-        #output { flex-grow: 1; overflow-y: auto; color: #aaffaa; text-shadow: 0 0 5px rgba(170, 255, 170, 0.5); }
-        .input-line { display: flex; gap: 8px; align-items: center; padding-top: 10px; border-top: 1px solid var(--border); }
+        #output { 
+            flex-grow: 1; 
+            overflow-y: auto; /* Internal scrolling only */
+            color: #aaffaa; 
+            font-size: 16px;
+            padding-right: 5px;
+        }
+        .input-line { 
+            display: flex; gap: 8px; align-items: center; 
+            padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.1); 
+            flex-shrink: 0; /* Prevents input line from disappearing */
+        }
         #input { background: transparent; border: none; outline: none; color: #fff; width: 100%; font-family: 'VT323'; font-size: 18px; }
 
-        /* Col 2: Art Wall */
-        .art-wall { 
-            display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; 
-        }
-        .art-item { 
-            position: relative; border-radius: 8px; overflow: hidden; 
-            border: 1px solid var(--border); background: #000;
-        }
+        /* Art Wall */
+        .art-wall { display: grid; grid-template-columns: 1.2fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; }
+        .art-item { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #000; }
         .art-item img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.5s; }
-        .art-item:hover img { opacity: 1; transform: scale(1.05); }
+        .art-item:hover img { opacity: 1; }
         .art-item.featured { grid-row: span 2; }
-        
-        .artist-tag { 
-            position: absolute; bottom: 8px; right: 8px; font-family: 'VT323'; 
-            font-size: 12px; background: rgba(0,0,0,0.7); padding: 2px 8px; border-radius: 4px;
-        }
+        .artist-tag { position: absolute; bottom: 8px; right: 8px; font-family: 'VT323'; font-size: 12px; background: rgba(0,0,0,0.7); padding: 2px 8px; }
 
-        /* Col 3: Gloomwood */
-        .gloom-box { text-align: center; display: flex; flex-direction: column; align-items: center; animation: float 6s ease-in-out infinite; }
+        /* Gloomwood */
+        .gloom-box { text-align: center; display: flex; flex-direction: column; height: 100%; animation: float 6s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-        
-        .gloom-title { font-family: 'Pinyon Script'; font-size: 38px; color: var(--purple); margin: 0 0 15px 0; }
-        .gloom-img { width: 100%; border-radius: 8px; border: 1px solid var(--purple); filter: sepia(0.3) contrast(1.2); }
-        .gloom-meta { font-family: 'VT323'; font-size: 14px; opacity: 0.5; margin-top: 10px; }
+        .gloom-title { font-family: 'Pinyon Script'; font-size: 36px; color: var(--purple); margin: 0 0 10px 0; }
+        .gloom-img { width: 100%; border-radius: 8px; border: 1px solid var(--border); flex-grow: 1; object-fit: cover; }
 
-        /* --- Bottom Area (The Fix) --- */
-        .bottom-area { 
-            display: flex; flex-direction: column; gap: 20px; 
-            padding-bottom: 80px; /* Space for next button */
-        }
-        .interest-box { 
-            position: relative; overflow: hidden; 
-            border-left: 4px solid var(--purple);
-        }
-        .interest-box::after {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, transparent 95%, var(--purple-glow) 95%);
-        }
+        /* Bottom Paragraphs */
+        .bottom-area { display: flex; flex-direction: column; gap: 20px; padding-bottom: 60px; }
+        .interest-box { border-left: 3px solid var(--purple); }
 
-        .back-nav { font-family: 'VT323'; text-transform: uppercase; letter-spacing: 2px; }
-        .back-nav a { color: var(--purple); text-decoration: none; font-size: 20px; }
+        .back-nav a { color: rgba(255,255,255,0.4); text-decoration: none; font-family: 'VT323'; font-size: 20px; }
+        .back-nav a:hover { color: var(--purple); }
 
         .next-btn {
-            position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; 
-            background: #fff; color: #000; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            text-decoration: none; font-weight: bold; box-shadow: 0 0 20px var(--purple-glow);
-            transition: 0.3s; z-index: 100;
+            position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; 
+            background: var(--glass); border: 1px solid var(--border); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: white; text-decoration: none;
         }
-        .next-btn:hover { transform: scale(1.1) rotate(90deg); background: var(--purple); }
 
-        /* Responsive Fix */
-        @media (max-width: 1000px) {
-            .top-row { grid-template-columns: 1fr; height: auto; }
-            .col-sidebar { order: 2; }
-            .art-wall { order: 1; height: 600px; }
-        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--purple); }
     </style>
 </head>
 <body>
 
-    <div class="bg-layer">
-        <div class="gradient-orb"></div>
-        <div class="scanlines"></div>
-        <div class="noise"></div>
-    </div>
+    <div class="bg-layer"><div class="gradient-orb"></div><div class="scanlines"></div></div>
 
     <div class="main-wrapper">
-        <div class="back-nav">
-            <a href="index.html">⟵ system.back_out</a>
-        </div>
+        <div class="back-nav"><a href="index.html">← back</a></div>
 
         <div class="top-row">
-            <!-- Sidebar -->
             <div class="col-sidebar">
-                <div>
-                    <span class="section-title">Connectivity</span>
+                <div class="links">
+                    <span class="section-title">Links</span>
                     <a href="https://steamcommunity.com/profiles/76561199448716750/" target="_blank" class="social-btn">
                         <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 6.627 5.37 12 12 12 6.626 0 12-5.373 12-12 0-6.627-5.374-12-12-12zm0 16.923c-.945 0-1.713-.768-1.713-1.713s.768-1.712 1.713-1.712 1.713.767 1.713 1.712-.768 1.713-1.713 1.713zm.001-6.19c-1.39 0-2.518 1.128-2.518 2.518 0 1.39 1.128 2.518 2.518 2.518s2.519-1.128 2.519-2.518c0-1.39-1.129-2.518-2.519-2.518zm1.085-3.08l1.04 2.87c.218.601.077 1.25-.366 1.68-.328.328-.758.508-1.22.508-.31 0-.61-.08-.88-.23l-3.32 1.01c-.01.12-.02.24-.02.37 0 1.58 1.28 2.86 2.86 2.86s2.86-1.28 2.86-2.86c0-1.54-1.22-2.79-2.75-2.86l.66-2.27c.18.04.36.06.55.06.56 0 1.08-.22 1.48-.62.4-.4.62-.92.62-1.48 0-.48-.16-.94-.46-1.31l-.05-.06zm-1.08 1.58c-.31 0-.56-.25-.56-.56s.25-.56.56-.56.56.25.56.56-.25.56-.56.56z"/></svg>
-                        steam: chronia
+                        chronia
                     </a>
                     <a href="https://namemc.com/profile/chronia69.1" target="_blank" class="social-btn">
                         <svg viewBox="0 0 24 24"><path d="M4 2h16c1.1 0 2 .9 2 2v16c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2zm2 4v4h4V6H6zm8 0v4h4V6h-4zM6 14v4h4v-4H6zm8 0v4h4v-4h-4z"/></svg>
-                        namemc: chronia69
+                        chronia69
                     </a>
                 </div>
                 
                 <div class="box terminal">
-                    <div id="output">Initialize system...<br>Status: ONLINE<br>Type /help to start<br><br></div>
+                    <div id="output">Type /help to show commands<br><br></div>
                     <div class="input-line">
-                        <span style="color:var(--purple)">root@chronia:~$</span>
+                        <span>></span>
                         <input type="text" id="input" autofocus autocomplete="off">
                     </div>
                 </div>
             </div>
 
-            <!-- Art Wall -->
             <div class="art-wall">
                 <div class="art-item featured">
                     <img src="fanart.png">
-                    <div class="artist-tag">CREATOR_01</div>
+                    <span class="artist-tag">creator's name</span>
                 </div>
                 <div class="art-item">
                     <img src="fanart2.png">
-                    <div class="artist-tag">CREATOR_02</div>
+                    <span class="artist-tag">creator's name</span>
                 </div>
                 <div class="art-item">
                     <img src="fanart3.png">
-                    <div class="artist-tag">CREATOR_03</div>
+                    <span class="artist-tag">creator's name</span>
                 </div>
             </div>
 
-            <!-- Gloomwood Featured -->
             <div class="col-gloom">
                 <div class="box gloom-box">
                     <h2 class="gloom-title">Gloomwood</h2>
                     <img src="gloomwood.png" class="gloom-img">
-                    <p style="margin: 15px 0 5px; font-weight: 600;">THE NEW BLOOD</p>
-                    <div class="gloom-meta">archive_id: 1892-X</div>
+                    <p style="font-family:'VT323'; margin-top:10px; opacity:0.6;">creator's name</p>
                 </div>
             </div>
         </div>
 
-        <!-- Bottom Content -->
         <div class="bottom-area">
-            <div class="box interest-box">
-                <span class="section-title" style="font-size:14px;">Brief_Bio.txt</span>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapiens autem vestigium facit ubi non est semita. I'm a digital creator fascinated by Victorian aesthetics, immersive sims, and the darker corners of the internet.
-            </div>
-            <div class="box interest-box">
-                <span class="section-title" style="font-size:14px;">Detailed_Interests.sys</span>
-                My journey into the "gloom" started with a love for stealth games and low-poly art styles. I spend most of my time exploring virtual worlds, collecting community fanart, and tinkering with terminal-based interfaces. Currently obsessed with the atmosphere of Gloomwood and the mechanical depth of retro hardware.
-            </div>
+            <div class="box interest-box">small paragraph about my intrests</div>
+            <div class="box interest-box">bigger paragraph about my intrests</div>
         </div>
     </div>
 
@@ -245,15 +192,18 @@
                 const cmd = input.value.toLowerCase().trim();
                 let res = '';
                 
-                if (cmd === '/help') res = '<span style="color:var(--accent)">- cat</span> (meow)<br><span style="color:var(--accent)">- secret</span> (???)<br><span style="color:var(--accent)">- neofetch</span> (specs)';
-                else if (cmd === 'cat') res = '<img src="cat.png" style="width:100px; border-radius:8px; margin:10px 0; border:1px solid var(--purple);">';
-                else if (cmd === 'secret') res = '<img src="putt.png" style="width:100px; border-radius:8px; margin:10px 0;">';
-                else if (cmd === 'neofetch') res = '<div style="color:var(--accent); font-size:14px;">OS: ChroniaOS v2.0<br>RAM: 12GB DDR4<br>GPU: RX 6800 XT<br>CPU: i7-10700K</div>';
+                if (cmd === '/help') res = '-cat<br>-secret<br>-neofetch';
+                else if (cmd === 'cat') res = '<img src="cat.png" style="width:100px; border-radius:8px; margin:5px 0;">';
+                else if (cmd === 'secret') res = '<img src="putt.png" style="width:100px; border-radius:8px; margin:5px 0;">';
+                else if (cmd === 'neofetch') res = '<img src="neo.png" style="width:120px; margin:5px 0;"><br>ram: 12gb<br>gpu: rx 6800 xt<br>cpu: i7-10700k';
+                else if (cmd === 'throzyckd') res = 'putt';
                 else if (cmd === '') return;
-                else res = '<span style="color:#ff5555">ERROR: Command "' + cmd + '" not recognized.</span>';
+                else res = '<span style="color:#ff5555">command not found</span>';
 
                 output.innerHTML += `<div><span style="opacity:0.5">> ${cmd}</span><br>${res}</div><br>`;
                 input.value = '';
+                
+                // Auto-scroll the terminal output
                 output.scrollTop = output.scrollHeight;
             }
         });
